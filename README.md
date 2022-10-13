@@ -1,16 +1,70 @@
-# novelai_manager
+<br>
+    <h2>
+        <p align="center"> NovelAI Manager </p>
+    </h2>
+<p align="center">~ NovelAIでプロンプトのメモを良い感じに出来るソフトウェア ~</p>
+<p align="center">
+    <a href="https://github.com/riku1227/NovelAIManager/releases/">
+        <img src="https://img.shields.io/badge/DOWNLOAD-Windows-blue?style=for-the-badge&logo=windows11">
+    </a>
+</p>
 
-A new Flutter project.
+* * *
+<br>
 
-## Getting Started
+![GitHub](https://img.shields.io/github/license/riku1227/NovelAIManager?style=flat-square)  
+NovelAIのプロンプトなどを良い感じに保存しておけるソフトウェアです (現状Windwosのみ)  
+とりあえず最低限使えるように速度重視で開発したので現状だと不親切 / 挙動が悪い などのことがあります  
+完全個人用にメモしておきたいプロンプトや、何処かしらで見つけたプロンプトをとりあえずメモしておきたい時など  
+**飽き性なのでメンテナンスには期待しないでください**  
+**データ消える可能性だって使えなくなる可能性だってあるんで使うのは自己責任で！**
 
-This project is a starting point for a Flutter application.
+<br>
 
-A few resources to get you started if this is your first Flutter project:
+## 🖼️ 画像
+* * *
+![novelai_image](https://user-images.githubusercontent.com/17927874/195606048-d290e3c8-5bd9-494c-a263-36ae98bf423d.png)
+![novelai_manager_03](https://user-images.githubusercontent.com/17927874/195606701-e327b0e3-cb4b-4bef-919c-b75eda9d6764.png)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## 📄 詳細な情報
+* * *
+* 保存したプロンプトの画像はどこに保存される？
+  * 実行ファイルがあるフォルダ/gallery_db/images/ の中に保存されます
+  * そのため、元の画像を削除/移動したとしても問題無く閲覧することが可能です
+  * 逆に言えば元の画像を削除してもDBから削除されません
+* データベースに保存されている画像を削除する方法はある？
+  * プロンプトのデータを削除すれば消えます
+    * プロンプトの編集で画像を消したとしても現状はデータベースから画像は削除されません
+    * 完璧に削除したい場合は画像保存が保存されているフォルダをチェックすることをおすすめします
+* データを他デバイスに移したい
+* データをバックアップしたい
+  * 実行ファイルがあるフォルダ/gallery_db/ がソフトのデータになります
+  * このデータを別の場所に保存することでバックアップが可能です
+  * 他デバイスに移したい場合は移行先デバイスの実行ファイルがあるフォルダに「gallery_db」フォルダを移してください
+* 起動しなくなり、メンテナンスもされていない場合データを救うとこはできますか？
+  * 画像データは「gallery_db」の中にそのまま保存されているため簡単に救出可能です
+  * プロンプトなどのデータは「Realm Studio」というソフトを使用し、データベースを開くことで一応可能です
+    * [Realm Studio](https://github.com/realm/realm-studio/releases/)
+* ここが使いにくい！
+* こんな機能が欲しい！
+* ここバグがある！
+  * 現状の技術力で実装可能でやる気があればするかもしれない
+    * TwitterとかGithubのIssueとかで言ってくれたら多分気がつきはする
+* このソフトは何らかのデータをどっかに送信してたりする？
+  * 多分してないです (少なくとも開発者はそんな情報取得していません)
+  * もしものもしで使用してるライブラリとかがとってる可能性があるので
+* データが消えた！
+* データが使えなくなった！
+  * このソフトは自己責任で使ってください
+  * データの保証なんてできません
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🚀今後について
+* * *
+* とりあえずコードが汚すぎるので書き直したい
+* UIをもうちょっと良い感じにしたい
+  * プロンプトの情報を見る画面とかかなり見にくい感じがする
+* データベースに保存されてる画像のクリーニング機能が欲しくはある
+* ギャラリーの順番を入れ替えれるようにしたい
+* プロンプト情報の画像の順番を入れ替えれるようにしたい
+* MacOS向けにリリースしたい気持ちはある
+* あわよくばAndroidも... (iOSは無理)
