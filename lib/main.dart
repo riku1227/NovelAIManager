@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:novelai_manager/components/gallery_gird_view.dart';
 import 'package:novelai_manager/model/gallery_data.dart';
+import 'package:novelai_manager/novel_ai_manager.dart';
 import 'package:novelai_manager/page/create_gallery_page.dart';
 import 'package:novelai_manager/repository/gallery_data_repository.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'dart:io';
 
 import 'components/gallery_card.dart';
@@ -66,6 +71,32 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  Future<void> checkUpdate(BuildContext context) async {
+    var messenger = ScaffoldMessenger.of(context);
+
+    var updateCheckUrl = Uri.parse(
+        "https://raw.githubusercontent.com/riku1227/NovelAIManager/files/version.json");
+    var respone = await http.get(updateCheckUrl);
+    if (respone.statusCode == 200) {
+      Map<String, dynamic> json = jsonDecode(respone.body);
+      if (json.containsKey("version_code")) {
+        if (NovelAIManager.versionCode < json["version_code"]) {
+          var snackBar = SnackBar(
+            content: Text('アップデートがあります: ${json["version"]}'),
+            duration: const Duration(seconds: 8),
+            action: SnackBarAction(
+              label: "ダウンロードページを開く",
+              onPressed: () {
+                launchUrlString(json["download_url"]);
+              },
+            ),
+          );
+          messenger.showSnackBar(snackBar);
+        }
+      }
+    }
+  }
+
   @override
   void initState() {
     //データベースを読み込む
@@ -81,6 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    checkUpdate(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
