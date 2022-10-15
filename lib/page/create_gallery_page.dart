@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:desktop_drop/desktop_drop.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -212,48 +213,56 @@ class _CreateGalleryPageState extends State<CreateGalleryPage> {
             //画像一覧
             Padding(
               padding: const EdgeInsets.all(8),
-              child: OutlineContainer(
-                child: SizedBox(
-                  height: 320,
-                  child: ListView.builder(
-                    itemCount: imageFilePathList.length,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: ((context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Stack(
-                          alignment: Alignment.topRight,
-                          children: [
-                            FutureBuilder(
-                                future: DBUtil.getImageFullPath(
-                                    imageFilePathList[index]),
-                                builder: ((context, snapshot) {
-                                  if (snapshot.data == null) {
-                                    return const Text("読み込み中");
-                                  } else {
-                                    if (snapshot.data == "") {
-                                      return const Text("画像が存在しません");
+              child: DropTarget(
+                onDragDone: ((details) {
+                  for (var item in details.files) {
+                    imageFilePathList.add(item.path);
+                  }
+                  setState(() {});
+                }),
+                child: OutlineContainer(
+                  child: SizedBox(
+                    height: 320,
+                    child: ListView.builder(
+                      itemCount: imageFilePathList.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: ((context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Stack(
+                            alignment: Alignment.topRight,
+                            children: [
+                              FutureBuilder(
+                                  future: DBUtil.getImageFullPath(
+                                      imageFilePathList[index]),
+                                  builder: ((context, snapshot) {
+                                    if (snapshot.data == null) {
+                                      return const Text("読み込み中");
                                     } else {
-                                      return Image.file(File(snapshot.data!));
+                                      if (snapshot.data == "") {
+                                        return const Text("画像が存在しません");
+                                      } else {
+                                        return Image.file(File(snapshot.data!));
+                                      }
                                     }
-                                  }
-                                })),
-                            //削除ボタン
-                            Padding(
-                              padding: const EdgeInsets.all(4),
-                              child: ElevatedButton(
-                                child: const Icon(Icons.remove_circle),
-                                onPressed: () {
-                                  setState(() {
-                                    imageFilePathList.removeAt(index);
-                                  });
-                                },
+                                  })),
+                              //削除ボタン
+                              Padding(
+                                padding: const EdgeInsets.all(4),
+                                child: ElevatedButton(
+                                  child: const Icon(Icons.remove_circle),
+                                  onPressed: () {
+                                    setState(() {
+                                      imageFilePathList.removeAt(index);
+                                    });
+                                  },
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }),
+                            ],
+                          ),
+                        );
+                      }),
+                    ),
                   ),
                 ),
               ),
