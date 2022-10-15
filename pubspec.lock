@@ -148,6 +148,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.2"
+  cross_file:
+    dependency: transitive
+    description:
+      name: cross_file
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.3+2"
   crypto:
     dependency: transitive
     description:
@@ -169,6 +176,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.4"
+  desktop_drop:
+    dependency: "direct main"
+    description:
+      name: desktop_drop
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.3"
   fake_async:
     dependency: transitive
     description:

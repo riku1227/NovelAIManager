@@ -40,6 +40,7 @@ dependencies:
   file_picker: ^5.2.1
   realm: ^0.5.0+beta
   path: ^1.8.2
+  desktop_drop: ^0.3.3
 
 dev_dependencies:
   flutter_test:
