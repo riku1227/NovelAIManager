@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.novelai_manager">
+    package="com.riku1227.novelai_manager">
    <application
         android:label="novelai_manager"
         android:name="${applicationName}"
