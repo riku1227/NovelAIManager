@@ -216,7 +216,10 @@ class _CreateGalleryPageState extends State<CreateGalleryPage> {
               child: DropTarget(
                 onDragDone: ((details) {
                   for (var item in details.files) {
-                    imageFilePathList.add(item.path);
+                    if (extension(item.path) == ".png" ||
+                        extension(item.path) == ".jpg") {
+                      imageFilePathList.add(item.path);
+                    }
                   }
                   setState(() {});
                 }),
