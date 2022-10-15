@@ -41,6 +41,7 @@ dependencies:
   realm: ^0.5.0+beta
   path: ^1.8.2
   desktop_drop: ^0.3.3
+  http: ^0.13.5
 
 dev_dependencies:
   flutter_test:
