@@ -21,6 +21,16 @@ NovelAIのプロンプトなどを良い感じに保存しておけるソフト�
 
 <br>
 
+## ダウンロード方法
+[https://github.com/riku1227/NovelAIManager/releases/latest](https://github.com/riku1227/NovelAIManager/releases/latest)  
+ここから「Assets」にある「NovelAIManager_Windows_x64_{バージョン}.zip
+」をダウンロード  
+わかりやすい場所に解凍して中にある「novelai_manager.exe」を起動
+
+## アップデート方法
+新しいバージョンのファイル全てを現在のバージョンのフォルダにコピー、上書きするもしくは  
+新しいバージョンのフォルダに「gallery_db」フォルダをコピーするでアップデートすることができます
+
 ## 🖼️ 画像
 * * *
 ![novelai_image](https://user-images.githubusercontent.com/17927874/195606048-d290e3c8-5bd9-494c-a263-36ae98bf423d.png)
