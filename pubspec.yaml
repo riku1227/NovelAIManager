@@ -42,6 +42,7 @@ dependencies:
   path: ^1.8.2
   desktop_drop: ^0.3.3
   http: ^0.13.5
+  url_launcher: ^6.1.6
 
 dev_dependencies:
   flutter_test:
