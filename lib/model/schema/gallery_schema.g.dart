@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'gallery_data.dart';
+part of 'gallery_schema.dart';
 
 // **************************************************************************
 // RealmObjectGenerator

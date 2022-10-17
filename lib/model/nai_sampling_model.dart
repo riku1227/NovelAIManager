@@ -1,4 +1,4 @@
-enum SamplingModel {
+enum NAISamplingModel {
   k_euler_ancestral("k_euler_ancestral"),
   k_euler("k_euler"),
   k_lms("k_lms"),
@@ -7,7 +7,7 @@ enum SamplingModel {
 
   final value;
 
-  const SamplingModel(this.value);
+  const NAISamplingModel(this.value);
 
   @override
   String toString() {

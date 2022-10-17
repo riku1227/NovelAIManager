@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// データを削除する時に使うアラートダイアログ
 /// 削除する場合はtrueを返す
-/// 削除しない(キャンセルの)場合はfalseを返す
+/// 削除しない(キャンセルの)場合は何も返さない(null)
 class DeleteAlertDialog extends StatelessWidget {
   const DeleteAlertDialog({super.key});
 
@@ -14,7 +14,7 @@ class DeleteAlertDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.pop(context, false);
+            Navigator.pop(context);
           },
           child: const Text("キャンセル"),
         ),

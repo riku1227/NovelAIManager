@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:novelai_manager/model/base_model.dart';
+
+import 'package:novelai_manager/model/nai_base_model.dart';
 
 /// モデルを選択するドロップダウンボタン
 /// NAI Diffusion Anime (Full)とかを選択する奴
 class BaseModelDropdown extends StatefulWidget {
   //現在選択されてる値を保存する変数
-  String? nowValue = BaseModel.NAI_DIFFUSION_ANIME_FULL.value;
+  String? nowValue = NAIBaseModel.NAI_DIFFUSION_ANIME_FULL.value;
   //変更された時に呼ばれるコールバック
   final Function(String) onChanged;
 
@@ -24,9 +25,9 @@ class BaseModelDropdown extends StatefulWidget {
 class _BaseModelDropdown extends State<BaseModelDropdown> {
   //ドロップダウンのリスト
   var baseModelList = [
-    BaseModel.NAI_DIFFUSION_ANIME_CURATED,
-    BaseModel.NAI_DIFFUSION_ANIME_FULL,
-    BaseModel.NAI_DIFFUSION_FURRY,
+    NAIBaseModel.NAI_DIFFUSION_ANIME_CURATED,
+    NAIBaseModel.NAI_DIFFUSION_ANIME_FULL,
+    NAIBaseModel.NAI_DIFFUSION_FURRY,
   ];
 
   @override

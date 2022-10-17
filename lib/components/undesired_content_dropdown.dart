@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:novelai_manager/model/undesired_content.dart';
+
+import '../model/nai_undesired_content.dart';
 
 /// UndesiredContentを選択するドロップダウンボタン
 /// Low Quality + Bad Anatomy とか
@@ -19,9 +20,9 @@ class UndesiredContentDropdown extends StatefulWidget {
 
 class _UndesiredContentDropdownState extends State<UndesiredContentDropdown> {
   final undesiredContentList = [
-    UndesiredContent.LOWQUALITY_PLUS_BADANATOMY,
-    UndesiredContent.LOWQUALITY,
-    UndesiredContent.NONE,
+    NAIUndesiredContent.LOWQUALITY_PLUS_BADANATOMY,
+    NAIUndesiredContent.LOWQUALITY,
+    NAIUndesiredContent.NONE,
   ];
 
   @override

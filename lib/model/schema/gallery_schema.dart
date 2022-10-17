@@ -1,10 +1,8 @@
 import 'package:realm/realm.dart';
-import 'base_model.dart';
-import 'sampling_model.dart';
-import 'undesired_content.dart';
 
-part 'gallery_data.g.dart';
+part 'gallery_schema.g.dart';
 
+/// ギャラリーデータのモデル
 @RealmModel()
 class _GalleryData {
   @PrimaryKey()
@@ -21,22 +19,11 @@ class _GalleryData {
   _PromptData? promptData;
   //フォルダーデータ
   _FolderData? folderData;
-
-  /* static _GalleryData builder(
-      {required String title,
-      bool isFolder = false,
-      PromptData? promptData,
-      _FolderData? folderData}) {
-    return _GalleryData()
-      ..title = title
-      ..createdAt = DateTime.now()
-      ..updatedAt = DateTime.now()
-      ..isFolder = isFolder
-      ..promptData = promptData
-      ..folderData = folderData;
-  } */
 }
 
+/// フォルダーデータのモデル
+/// いつかフォルダー機能実装したいと思ってとりあえず作ったけど
+/// どういう感じに実装するかも決まってないからなんとも言えない
 @RealmModel()
 class _FolderData {
   @PrimaryKey()
@@ -47,6 +34,7 @@ class _FolderData {
   String description = "";
 }
 
+/// プロンプトデータのモデル
 @RealmModel()
 class _PromptData {
   @PrimaryKey()
@@ -110,6 +98,7 @@ class _PromptData {
   String sampling = "k_euler_ancestral";
 }
 
+/// 画像データのモデル
 @RealmModel()
 class _ImageData {
   @PrimaryKey()

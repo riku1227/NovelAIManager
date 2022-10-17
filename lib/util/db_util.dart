@@ -1,21 +1,51 @@
 import 'dart:io';
 
-import 'package:novelai_manager/repository/gallery_data_repository.dart';
+import 'package:novelai_manager/novelai_manager.dart';
 
 class DBUtil {
-  /// DBに保存されている相対パスから画像ファイルのパスを取得する
+  /// データベースを保存するベースディレクトリを返す
+  static Future<Directory> getDataBaseFolder() async {
+    //実行ファイルがあるフォルダの場所
+    final exeFolderPath = File(Platform.resolvedExecutable).parent.path;
+    //データベースのディレクトリ
+    final dbDir =
+        Directory("$exeFolderPath/${NovelAIManager.baseDBFolderName}");
+
+    //ディレクトリが無い場合は作成する
+    if (!await dbDir.exists()) {
+      await dbDir.create();
+    }
+
+    return dbDir;
+  }
+
+  /// データーベースの画像を保存するディレクトリを返す
+  static Future<Directory> getDataBaseImgFolder() async {
+    var dbDir = await getDataBaseFolder();
+    //画像を保存するディレクトリ
+    var imgFolder = Directory("${dbDir.path}/images");
+
+    //ディレクトリが無い場合は作成する
+    if (!await imgFolder.exists()) {
+      await imgFolder.create();
+    }
+
+    return imgFolder;
+  }
+
+  /// DBに保存されている相対パスから画像ファイルのフルパスを取得する
   static Future<String> getImageFullPath(String relativePath) async {
-    var imgFolder = await GalleryDataRepository.getDataBaseImgFolder();
-    var imgFilePath = "${imgFolder.path}/$relativePath";
+    final imgDir = await DBUtil.getDataBaseImgFolder();
+    final imgFilePath = "${imgDir.path}/$relativePath";
     if (await File(imgFilePath).exists()) {
       return imgFilePath;
     }
 
-    //与えられたパスにファイルが存在してた場合はそのまま返す
+    /// 与えられたパスが実はフルパスだった場合はそのまま返す
     if (await File(relativePath).exists()) {
       return relativePath;
     }
 
-    return "";
+    return Future.error("画像が存在しません");
   }
 }

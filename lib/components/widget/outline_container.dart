@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-//アウトラインをボーダーで装飾するコンテナ
+/// アウトラインをボーダーで装飾するコンテナ
 class OutlineContainer extends StatelessWidget {
   final Widget? child;
   Color? outlineColor;
