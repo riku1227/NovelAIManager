@@ -83,6 +83,10 @@ class _GalleryEditPage extends State<GalleryEditPage> {
   /// コピー後のデータだと別オブジェクトとなってしまい、削除できないのでコピー前のオリジナルデータを保存しておく
   RealmList<ImageData>? originalImageDataList;
 
+  /// 入力欄に変更があったかの確認フラグ
+  /// 変更があった場合は画面遷移時に警告を表示するために保持
+  bool isEditDirty = false;
+
   @override
   void initState() {
     if (widget.galleryData != null) {
@@ -224,6 +228,7 @@ class _GalleryEditPage extends State<GalleryEditPage> {
             if (extension(item.path) == ".png" ||
                 extension(item.path) == ".jpg") {
               imageFilePathList.add(item.path);
+              isEditDirty = true;
             }
 
             /// 追加するたびに更新するよりは最後にまとめて更新した方が多分良い
@@ -314,6 +319,7 @@ class _GalleryEditPage extends State<GalleryEditPage> {
                   controller: promptTextControllerList[index],
                   onChanged: (value) {
                     galleryData.promptData!.prompt[index] = value;
+                    isEditDirty = true;
                   },
                 ),
               ),
@@ -354,6 +360,7 @@ class _GalleryEditPage extends State<GalleryEditPage> {
               if (parse != null) {
                 galleryData.promptData!.steps = parse;
               }
+              isEditDirty = true;
             },
           ),
         ),
@@ -374,6 +381,7 @@ class _GalleryEditPage extends State<GalleryEditPage> {
               if (parse != null) {
                 galleryData.promptData!.scale = parse;
               }
+              isEditDirty = true;
             },
           ),
         ),
@@ -394,6 +402,7 @@ class _GalleryEditPage extends State<GalleryEditPage> {
               if (parse != null) {
                 galleryData.promptData!.seed = parse;
               }
+              isEditDirty = true;
             },
           ),
         ),
@@ -405,260 +414,303 @@ class _GalleryEditPage extends State<GalleryEditPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final promptData = galleryData.promptData!;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("ギャラリーを編集"),
-        actions: [
-          //-----コピーボタン-----
-          IconButton(
-            onPressed: () async {
-              /// タイトルが入力されていない場合はエラースナックバーを出す
-              if (galleryData.title.isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text("タイトルが入力されていません"),
-                  duration: Duration(milliseconds: 850),
-                ));
-                return;
-              }
-              await saveGallery(context);
-            },
-            icon: const Icon(Icons.save),
+    return WillPopScope(
+        onWillPop: () async {
+          bool? isConfirmed = true;
+          if (isEditDirty) {
+            isConfirmed = await showDialog<bool>(
+              context: context,
+              barrierDismissible: false,
+              builder: (_) {
+                return AlertDialog(
+                  title: const Text("警告"),
+                  content: const Text("未保存の項目は破棄されます。\nよろしいですか？"),
+                  actions: [
+                    ElevatedButton(
+                      child: SizedBox(
+                          width: 50,
+                          child: Row(
+                            children: const [Text("OK")],
+                          )),
+                      onPressed: () => Navigator.pop(context, true),
+                    ),
+                    ElevatedButton(
+                      child: SizedBox(
+                          width: 70,
+                          child: Row(
+                            children: const [Text("キャンセル")],
+                          )),
+                      onPressed: () => Navigator.pop(context, false),
+                    ),
+                  ],
+                );
+              },
+            );
+          }
+          return isConfirmed!;
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text("ギャラリーを編集"),
+            actions: [
+              //-----コピーボタン-----
+              IconButton(
+                onPressed: () async {
+                  /// タイトルが入力されていない場合はエラースナックバーを出す
+                  if (galleryData.title.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text("タイトルが入力されていません"),
+                      duration: Duration(milliseconds: 850),
+                    ));
+                    return;
+                  }
+                  await saveGallery(context);
+                },
+                icon: const Icon(Icons.save),
+              ),
+            ],
           ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            /// ****************************************
-            /// ---------- 画像リスト ----------
-            /// ****************************************
-            //-----画像リスト-----
-            buildAddImageList(),
-            //-----画像追加ボタン-----
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+          body: SingleChildScrollView(
+            child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 16),
-                  child: OutlinedButton.icon(
-                    icon: const Icon(Icons.photo),
-                    label: const Text("画像を追加する"),
-                    onPressed: () {
-                      pickImage();
-                    },
+                /// ****************************************
+                /// ---------- 画像リスト ----------
+                /// ****************************************
+                //-----画像リスト-----
+                buildAddImageList(),
+                //-----画像追加ボタン-----
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16),
+                      child: OutlinedButton.icon(
+                        icon: const Icon(Icons.photo),
+                        label: const Text("画像を追加する"),
+                        onPressed: () {
+                          pickImage();
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+
+                //-----画像一覧と基本設定の仕切り-----
+                const Padding(
+                  padding: EdgeInsets.only(
+                    left: 8,
+                    right: 8,
+                  ),
+                  child: Divider(
+                    height: 32,
+                  ),
+                ),
+
+                /// ****************************************
+                /// ---------- プロンプトカード ----------
+                /// ****************************************
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(width: double.infinity),
+                        Text(
+                          "基本設定",
+                          style: theme.textTheme.titleLarge,
+                        ),
+                        const SizedBox(height: 8),
+                        //-----タイトルテキストフィールド-----
+                        TextField(
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: "タイトル",
+                          ),
+                          maxLines: 1,
+                          controller: galleryTitleTextController,
+                          onChanged: (value) {
+                            galleryData.title = value;
+                            isEditDirty = true;
+                          },
+                        ),
+                        const SizedBox(height: 8),
+                        //-----説明テキストフィールド-----
+                        TextField(
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: "説明",
+                          ),
+                          minLines: 2,
+                          maxLines: 3,
+                          controller: promptDescriptionTextController,
+                          onChanged: (value) {
+                            promptData.description = value;
+                            isEditDirty = true;
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        //-----ベースモデルドロップダウン-----
+                        const Text("モデル"),
+                        BaseModelDropdown(
+                          nowValue: promptData.baseModel,
+                          onChanged: (value) {
+                            promptData.baseModel = value;
+                            isEditDirty = true;
+                          },
+                        ),
+                        const SizedBox(height: 8),
+                        const Text("プロンプト"),
+                        buildPromptTextFieldList(),
+                        const SizedBox(height: 8),
+                        //-----プロンプト追加ボタン-----
+                        OutlinedButton.icon(
+                          icon: const Icon(Icons.add),
+                          label: const Text("プロンプトを追加する"),
+                          onPressed: () {
+                            setState(() {
+                              promptData.prompt.add("");
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                /// ****************************************
+                /// ---------- Model-Specific Settingsカード ----------
+                /// ****************************************
+                ///   | ネガティブプロンプトとか
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(width: double.infinity),
+                        Text(
+                          "Model-Specific Settings",
+                          style: theme.textTheme.titleLarge,
+                        ),
+                        const SizedBox(height: 8),
+                        //-----ネガティブプロンプトテキストフィールド-----
+                        TextField(
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: "ネガティブプロンプト(Undesired Content プロンプト)",
+                          ),
+                          maxLines: 2,
+                          controller: negativePromptTextController,
+                          onChanged: (value) {
+                            promptData.undesiredPrompt[0] = value;
+                            isEditDirty = true;
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        //-----Undesired Contentドロップダウン-----
+                        const Text("Undesired Content"),
+                        UndesiredContentDropdown(
+                          nowValue: promptData.undesiredContent,
+                          onChanged: (value) {
+                            promptData.undesiredContent = value;
+                            isEditDirty = true;
+                          },
+                        ),
+                        //-----クオリティタグを自動的に追加するチェックボックス-----
+                        CheckboxListTile(
+                          title:
+                              const Text("クオリティタグを自動で追加する (Add Quality Tags)"),
+                          controlAffinity: ListTileControlAffinity.leading,
+                          value: promptData.addQualityTag,
+                          onChanged: (value) {
+                            setState(() {
+                              promptData.addQualityTag = value!;
+                            });
+                            isEditDirty = true;
+                          },
+                        ),
+                        const SizedBox(height: 8),
+                        //-----Steps, Scale, Seed のテキストフィールド
+                        buildSpecificSettingsTextField(),
+                      ],
+                    ),
+                  ),
+                ),
+
+                /// ****************************************
+                /// ---------- 画像設定カード ----------
+                /// ****************************************
+                ///   | 解像度とか
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(width: double.infinity),
+                        Text(
+                          "画像設定",
+                          style: theme.textTheme.titleLarge,
+                        ),
+                        const SizedBox(height: 16),
+                        //-----画質設定-----
+                        Row(
+                          children: [
+                            //-----横幅解像度のテキストフィールド-----
+                            SizedBox(
+                              width: 160,
+                              child: TextField(
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: "横幅",
+                                ),
+                                controller: imageWidthTextController,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                onChanged: (value) {
+                                  final parse = int.tryParse(value);
+                                  if (parse != null) {
+                                    promptData.width = parse;
+                                  }
+                                  isEditDirty = true;
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            const Text("X"),
+                            const SizedBox(width: 8),
+                            //-----縦幅解像度のテキストフィールド-----
+                            SizedBox(
+                              width: 160,
+                              child: TextField(
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: "縦幅",
+                                ),
+                                controller: imageHeightTextController,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                onChanged: (value) {
+                                  final parse = int.tryParse(value);
+                                  if (parse != null) {
+                                    promptData.height = parse;
+                                  }
+                                  isEditDirty = true;
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
             ),
-
-            //-----画像一覧と基本設定の仕切り-----
-            const Padding(
-              padding: EdgeInsets.only(
-                left: 8,
-                right: 8,
-              ),
-              child: Divider(
-                height: 32,
-              ),
-            ),
-
-            /// ****************************************
-            /// ---------- プロンプトカード ----------
-            /// ****************************************
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(width: double.infinity),
-                    Text(
-                      "基本設定",
-                      style: theme.textTheme.titleLarge,
-                    ),
-                    const SizedBox(height: 8),
-                    //-----タイトルテキストフィールド-----
-                    TextField(
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: "タイトル",
-                      ),
-                      maxLines: 1,
-                      controller: galleryTitleTextController,
-                      onChanged: (value) {
-                        galleryData.title = value;
-                      },
-                    ),
-                    const SizedBox(height: 8),
-                    //-----説明テキストフィールド-----
-                    TextField(
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: "説明",
-                      ),
-                      minLines: 2,
-                      maxLines: 3,
-                      controller: promptDescriptionTextController,
-                      onChanged: (value) {
-                        promptData.description = value;
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    //-----ベースモデルドロップダウン-----
-                    const Text("モデル"),
-                    BaseModelDropdown(
-                      nowValue: promptData.baseModel,
-                      onChanged: (value) {
-                        promptData.baseModel = value;
-                      },
-                    ),
-                    const SizedBox(height: 8),
-                    const Text("プロンプト"),
-                    buildPromptTextFieldList(),
-                    const SizedBox(height: 8),
-                    //-----プロンプト追加ボタン-----
-                    OutlinedButton.icon(
-                      icon: const Icon(Icons.add),
-                      label: const Text("プロンプトを追加する"),
-                      onPressed: () {
-                        setState(() {
-                          promptData.prompt.add("");
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            /// ****************************************
-            /// ---------- Model-Specific Settingsカード ----------
-            /// ****************************************
-            ///   | ネガティブプロンプトとか
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(width: double.infinity),
-                    Text(
-                      "Model-Specific Settings",
-                      style: theme.textTheme.titleLarge,
-                    ),
-                    const SizedBox(height: 8),
-                    //-----ネガティブプロンプトテキストフィールド-----
-                    TextField(
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: "ネガティブプロンプト(Undesired Content プロンプト)",
-                      ),
-                      maxLines: 2,
-                      controller: negativePromptTextController,
-                      onChanged: (value) {
-                        promptData.undesiredPrompt[0] = value;
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    //-----Undesired Contentドロップダウン-----
-                    const Text("Undesired Content"),
-                    UndesiredContentDropdown(
-                      nowValue: promptData.undesiredContent,
-                      onChanged: (value) {
-                        promptData.undesiredContent = value;
-                      },
-                    ),
-                    //-----クオリティタグを自動的に追加するチェックボックス-----
-                    CheckboxListTile(
-                      title: const Text("クオリティタグを自動で追加する (Add Quality Tags)"),
-                      controlAffinity: ListTileControlAffinity.leading,
-                      value: promptData.addQualityTag,
-                      onChanged: (value) {
-                        setState(() {
-                          promptData.addQualityTag = value!;
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 8),
-                    //-----Steps, Scale, Seed のテキストフィールド
-                    buildSpecificSettingsTextField(),
-                  ],
-                ),
-              ),
-            ),
-
-            /// ****************************************
-            /// ---------- 画像設定カード ----------
-            /// ****************************************
-            ///   | 解像度とか
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(width: double.infinity),
-                    Text(
-                      "画像設定",
-                      style: theme.textTheme.titleLarge,
-                    ),
-                    const SizedBox(height: 16),
-                    //-----画質設定-----
-                    Row(
-                      children: [
-                        //-----横幅解像度のテキストフィールド-----
-                        SizedBox(
-                          width: 160,
-                          child: TextField(
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: "横幅",
-                            ),
-                            controller: imageWidthTextController,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            onChanged: (value) {
-                              final parse = int.tryParse(value);
-                              if (parse != null) {
-                                promptData.width = parse;
-                              }
-                            },
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        const Text("X"),
-                        const SizedBox(width: 8),
-                        //-----縦幅解像度のテキストフィールド-----
-                        SizedBox(
-                          width: 160,
-                          child: TextField(
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: "縦幅",
-                            ),
-                            controller: imageHeightTextController,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            onChanged: (value) {
-                              final parse = int.tryParse(value);
-                              if (parse != null) {
-                                promptData.height = parse;
-                              }
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 }
