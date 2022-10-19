@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:novelai_manager/components/dialog/delete_alert_dialog.dart';
+import 'package:novelai_manager/components/dialog/simple_alert_dialog.dart';
 import 'package:novelai_manager/components/widget/outline_container.dart';
 import 'package:novelai_manager/model/nai_base_model.dart';
 import 'package:novelai_manager/model/nai_undesired_content.dart';
@@ -502,7 +502,10 @@ class _PromptInfoPageState extends State<PromptInfoPage> {
               showDialog(
                   context: context,
                   builder: ((_) {
-                    return const DeleteAlertDialog();
+                    return SimpleAlertDialog(
+                        title: const Text("データを削除しますか？"),
+                        content: const Text("削除したデータを復元することは出来ません"),
+                        positiveButtonText: "削除する");
                   })).then((value) {
                 // キャンセルもしくは外をタップしてダイアログを閉じたとき
                 if (value == null) {

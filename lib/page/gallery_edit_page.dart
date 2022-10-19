@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:novelai_manager/components/base_model_dropdown.dart';
+import 'package:novelai_manager/components/dialog/simple_alert_dialog.dart';
 import 'package:novelai_manager/components/widget/outline_container.dart';
 import 'package:novelai_manager/repository/gallery_data_repository.dart';
 import 'package:novelai_manager/util/db_util.dart';
@@ -416,38 +417,31 @@ class _GalleryEditPage extends State<GalleryEditPage> {
     final promptData = galleryData.promptData!;
     return WillPopScope(
         onWillPop: () async {
-          bool? isConfirmed = true;
+          //どこかしらのデータが編集されていたら確認ダイアログを表示する
           if (isEditDirty) {
-            isConfirmed = await showDialog<bool>(
+            bool? isConfirmed = await showDialog<bool>(
               context: context,
               barrierDismissible: false,
               builder: (_) {
-                return AlertDialog(
-                  title: const Text("警告"),
-                  content: const Text("未保存の項目は破棄されます。\nよろしいですか？"),
-                  actions: [
-                    ElevatedButton(
-                      child: SizedBox(
-                          width: 50,
-                          child: Row(
-                            children: const [Text("OK")],
-                          )),
-                      onPressed: () => Navigator.pop(context, true),
-                    ),
-                    ElevatedButton(
-                      child: SizedBox(
-                          width: 70,
-                          child: Row(
-                            children: const [Text("キャンセル")],
-                          )),
-                      onPressed: () => Navigator.pop(context, false),
-                    ),
-                  ],
+                return SimpleAlertDialog(
+                  title: const Text("データが編集されています"),
+                  content: const Text("未保存の項目は破棄されます\nそれでもページを閉じますか？"),
+                  positiveButtonText: "閉じる",
                 );
               },
             );
+
+            /// SimpleAlertDialogはキャンセルした場合nullを返すので
+            /// データがあった時点でポジティブボタンを押したことになる
+            if (isConfirmed != null) {
+              return true;
+            } else {
+              return false;
+            }
+          } else {
+            //データを編集してない場合は普通に戻る
+            return true;
           }
-          return isConfirmed!;
         },
         child: Scaffold(
           appBar: AppBar(
