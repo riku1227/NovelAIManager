@@ -78,3 +78,11 @@ NovelAIのプロンプトなどを良い感じに保存しておけるソフト�
 * プロンプト情報の画像の順番を入れ替えれるようにしたい
 * MacOS向けにリリースしたい気持ちはある
 * あわよくばAndroidも... (iOSは無理)
+
+
+## Contributors
+<a href="https://github.com/riku1227/NovelAIManager/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=riku1227/NovelAIManager" />
+</a>
+
+Made with [contrib.rocks](https://contrib.rocks).
