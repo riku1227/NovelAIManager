@@ -79,8 +79,14 @@ NovelAIのプロンプトなどを良い感じに保存しておけるソフト�
 * MacOS向けにリリースしたい気持ちはある
 * あわよくばAndroidも... (iOSは無理)
 
+## 📄サードパーティーライセンス
+* * *
+プロンプト変換機能  
+(開発に関わった全てのニキ達に感謝🙏)  
+[naisd5ch/novel-ai-5ch-wiki-js](https://github.com/naisd5ch/novel-ai-5ch-wiki-js)
 
-## Contributors
+## 👥 Contributors
+* * *
 <a href="https://github.com/riku1227/NovelAIManager/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=riku1227/NovelAIManager" />
 </a>
