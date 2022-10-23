@@ -1,5 +1,6 @@
 <br>
     <h2>
+        <p align="center"><img src="https://user-images.githubusercontent.com/17927874/197396354-af0a675c-9f8c-4bf3-8bb8-c32cbbf4db59.png"></p>
         <p align="center"> NovelAI Manager </p>
     </h2>
 <p align="center">~ NovelAIでプロンプトのメモを良い感じに出来るソフトウェア ~</p>
