@@ -4,7 +4,6 @@ import 'package:desktop_drop/desktop_drop.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart';
 import 'package:novelai_manager/components/base_model_dropdown.dart';
 import 'package:novelai_manager/components/dialog/simple_alert_dialog.dart';
 import 'package:novelai_manager/components/widget/outline_container.dart';
@@ -239,11 +238,29 @@ class _GalleryEditPage extends State<GalleryEditPage> {
         child: OutlineContainer(
           child: SizedBox(
             height: 320,
-            child: ListView.builder(
+            child: ReorderableListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: imageFilePathList.length,
+              onReorder: (int oldIndex, int newIndex) {
+                if (oldIndex < newIndex) {
+                  /// oldIndexの要素を削除する前の段階でのnewIndexなので(?)
+                  /// oldIndexから消した後に処理する場合1ずれる
+                  /// 例: 0番目の要素を3番目に持ってきた場合、newIndexは"3"になる
+                  ///   | まず0番目の要素を削除してから追加し直すのでindexが1ずれる(少なくなる)
+                  newIndex--;
+                }
+                //まず配列から削除する
+                final path = imageFilePathList.removeAt(oldIndex);
+
+                setState(() {
+                  //削除した要素をnewIndexの場所に追加する
+                  imageFilePathList.insert(newIndex, path);
+                });
+                isEditDirty = true;
+              },
               itemBuilder: (context, index) {
                 return Padding(
+                  key: Key("image_${imageFilePathList[index]}"),
                   padding: const EdgeInsets.all(8),
                   child: Stack(
                     alignment: Alignment.topRight,
