@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:novelai_manager/components/dialog/prompt_convert_dialog.dart';
 import 'package:novelai_manager/components/dialog/simple_alert_dialog.dart';
 import 'package:novelai_manager/components/widget/outline_container.dart';
 import 'package:novelai_manager/model/nai_base_model.dart';
@@ -10,6 +11,7 @@ import 'package:novelai_manager/page/gallery_edit_page.dart';
 import 'package:novelai_manager/repository/gallery_data_repository.dart';
 import 'package:novelai_manager/util/db_util.dart';
 
+import '../components/widget/long_press_icon_button.dart';
 import '../model/schema/gallery_schema.dart';
 
 /// プロンプトの情報を表示するページ
@@ -158,8 +160,23 @@ class _PromptInfoPageState extends State<PromptInfoPage> {
                 ),
               ),
               //コピーボタン
-              IconButton(
-                onPressed: () async {
+              LongPressIconButton(
+                onLongPress: () async {
+                  //変換ダイアログを表示して結果を取得
+                  final convertResult = await showDialog(
+                      context: context,
+                      builder: (_) => PromptConvertDialog(
+                            prompt: promptTextControllerList[index].text,
+                          ));
+                  //結果がnullじゃなかったら
+                  if (convertResult != null) {
+                    if (!mounted) {
+                      return;
+                    }
+                    await copyToClipboard(context, convertResult);
+                  }
+                },
+                onTap: () async {
                   /// クリップボードにコピー
                   await copyToClipboard(
                       context, promptTextControllerList[index].text);
@@ -190,8 +207,23 @@ class _PromptInfoPageState extends State<PromptInfoPage> {
           ),
         ),
         //コピーボタン
-        IconButton(
-          onPressed: () async {
+        LongPressIconButton(
+          onLongPress: () async {
+            //変換ダイアログを表示して結果を取得
+            final convertResult = await showDialog(
+                context: context,
+                builder: (_) => PromptConvertDialog(
+                      prompt: negativePromptTextController.text,
+                    ));
+            //結果がnullじゃなかったら
+            if (convertResult != null) {
+              if (!mounted) {
+                return;
+              }
+              await copyToClipboard(context, convertResult);
+            }
+          },
+          onTap: () async {
             //クリップボードにコピーする
             await copyToClipboard(context, negativePromptTextController.text);
           },
