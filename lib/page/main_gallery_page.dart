@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:novelai_manager/components/gallery_card.dart';
 import 'package:novelai_manager/model/schema/gallery_schema.dart';
+import 'package:novelai_manager/novelai_manager.dart';
 import 'package:novelai_manager/page/gallery_edit_page.dart';
 import 'package:novelai_manager/page/prompt_info_page.dart';
 import 'package:novelai_manager/repository/gallery_data_repository.dart';
@@ -69,6 +70,19 @@ class _MainGalleryPageState extends State<MainGalleryPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("NovelAI Manager"),
+        actions: [
+          IconButton(
+            onPressed: () {
+              showAboutDialog(
+                  context: context,
+                  applicationVersion: NovelAIManager.version,
+                  applicationIcon: Image.asset("assets/images/icon.png"),
+                  applicationLegalese:
+                      "プロンプト変換機能(アルゴリズム)\nhttps://github.com/naisd5ch/novel-ai-5ch-wiki-js\n\nこのソフトのソースコード\nhttps://github.com/riku1227/NovelAIManager");
+            },
+            icon: const Icon(Icons.info),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
