@@ -133,8 +133,23 @@ class _GalleryEditPage extends State<GalleryEditPage> {
     super.initState();
   }
 
+  /// 画像をリストに追加する
+  /// 既に追加されている場合はスナックバーを出す
+  void addImageFilePath(String filePath, BuildContext context) {
+    if (imageFilePathList.contains(filePath)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          duration: Duration(milliseconds: 1200),
+          content: Text("追加しようとした画像は既に登録されています"),
+        ),
+      );
+    } else {
+      imageFilePathList.add(filePath);
+    }
+  }
+
   /// 画像ファイルを選択する
-  void pickImage() async {
+  void pickImage(BuildContext context) async {
     final filePaths = await FilePicker.platform.pickFiles(
       type: FileType.image,
       allowMultiple: true,
@@ -146,7 +161,7 @@ class _GalleryEditPage extends State<GalleryEditPage> {
     for (var item in filePaths.paths) {
       if (item != null) {
         setState(() {
-          imageFilePathList.add(item);
+          addImageFilePath(item, context);
         });
       }
     }
@@ -217,7 +232,7 @@ class _GalleryEditPage extends State<GalleryEditPage> {
 
   /// 画像一覧を作成する
   /// アウトラインで囲まれた画像の横並びリスト
-  Widget buildAddImageList() {
+  Widget buildAddImageList(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8),
       //ファイルをD&Dできるようにするウィジェット
@@ -227,7 +242,7 @@ class _GalleryEditPage extends State<GalleryEditPage> {
             ///画像ファイル(png, jpg)だったら追加する
             if (extension(item.path) == ".png" ||
                 extension(item.path) == ".jpg") {
-              imageFilePathList.add(item.path);
+              addImageFilePath(item.path, context);
               isEditDirty = true;
             }
 
@@ -488,7 +503,7 @@ class _GalleryEditPage extends State<GalleryEditPage> {
                 /// ---------- 画像リスト ----------
                 /// ****************************************
                 //-----画像リスト-----
-                buildAddImageList(),
+                buildAddImageList(context),
                 //-----画像追加ボタン-----
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -499,7 +514,7 @@ class _GalleryEditPage extends State<GalleryEditPage> {
                         icon: const Icon(Icons.photo),
                         label: const Text("画像を追加する"),
                         onPressed: () {
-                          pickImage();
+                          pickImage(context);
                         },
                       ),
                     ),
