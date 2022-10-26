@@ -29,12 +29,16 @@ class GalleryCard extends StatelessWidget {
           if (snapshot.hasError) {
             return Text(snapshot.error.toString());
           } else {
-            //Ink.imageにすることで画像にもリップルエフェクトとかが付くようになる
-            return Ink.image(
-              image: FileImage(
-                File(snapshot.data!),
+            /// Inkでリップルエフェクトが付く画像を作成
+            /// BoxDecorationで画像を指定することで角丸にできる
+            return Ink(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                image: DecorationImage(
+                  image: FileImage(File(snapshot.data!)),
+                  fit: BoxFit.cover,
+                ),
               ),
-              fit: BoxFit.cover,
             );
           }
         } else {
