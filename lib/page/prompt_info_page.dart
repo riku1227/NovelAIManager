@@ -12,6 +12,7 @@ import 'package:novelai_manager/repository/gallery_data_repository.dart';
 import 'package:novelai_manager/util/db_util.dart';
 
 import '../components/widget/long_press_icon_button.dart';
+import '../components/widget/my_scroll_view.dart';
 import '../model/schema/gallery_schema.dart';
 
 /// プロンプトの情報を表示するページ
@@ -96,39 +97,42 @@ class _PromptInfoPageState extends State<PromptInfoPage> {
   /// 左側のUIを作成
   ///  | 登録されている画像のリスト
   Widget buildLeftAreaWidget(PromptData promptData) {
-    return ListView.builder(
-      itemCount: promptData.generatedImageList.length,
-      itemBuilder: ((context, index) {
-        return SizedBox(
-          height: 512,
-          child: Padding(
-            padding: const EdgeInsets.all(4),
-            child: OutlineContainer(
-              child: FutureBuilder(
-                //DBに保存されている相対パスから画像ファイルのフルパスを取得
-                future: DBUtil.getImageFullPath(
-                    promptData.generatedImageList[index].imagePath),
-                builder: (context, snapshot) {
-                  //データがまだ届いてない場合は読み込み中のテキストを出す
-                  if (!snapshot.hasData) {
-                    return const Text("読み込み中...");
-                  } else {
-                    /// データがエラーだったらエラー文をそのままテキストに出す
-                    /// 正常に取得できた場合は画像を表示
-                    if (snapshot.hasError) {
-                      return Text(snapshot.error.toString());
+    return MyScrollView(
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: promptData.generatedImageList.length,
+        itemBuilder: ((context, index) {
+          return SizedBox(
+            height: 512,
+            child: Padding(
+              padding: const EdgeInsets.all(4),
+              child: OutlineContainer(
+                child: FutureBuilder(
+                  //DBに保存されている相対パスから画像ファイルのフルパスを取得
+                  future: DBUtil.getImageFullPath(
+                      promptData.generatedImageList[index].imagePath),
+                  builder: (context, snapshot) {
+                    //データがまだ届いてない場合は読み込み中のテキストを出す
+                    if (!snapshot.hasData) {
+                      return const Text("読み込み中...");
                     } else {
-                      return Image.file(
-                        File(snapshot.data!),
-                      );
+                      /// データがエラーだったらエラー文をそのままテキストに出す
+                      /// 正常に取得できた場合は画像を表示
+                      if (snapshot.hasError) {
+                        return Text(snapshot.error.toString());
+                      } else {
+                        return Image.file(
+                          File(snapshot.data!),
+                        );
+                      }
                     }
-                  }
-                },
+                  },
+                ),
               ),
             ),
-          ),
-        );
-      }),
+          );
+        }),
+      ),
     );
   }
 
@@ -280,7 +284,7 @@ class _PromptInfoPageState extends State<PromptInfoPage> {
     imageWidthTextController.text = promptData.width.toString();
     imageHeightTextController.text = promptData.height.toString();
 
-    return SingleChildScrollView(
+    return MyScrollView(
       child: Padding(
         padding: const EdgeInsets.only(left: 8, right: 8),
         child: Column(

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:novelai_manager/components/base_model_dropdown.dart';
 import 'package:novelai_manager/components/dialog/simple_alert_dialog.dart';
+import 'package:novelai_manager/components/widget/my_scroll_view.dart';
 import 'package:novelai_manager/components/widget/outline_container.dart';
 import 'package:novelai_manager/repository/gallery_data_repository.dart';
 import 'package:novelai_manager/util/db_util.dart';
@@ -496,7 +497,7 @@ class _GalleryEditPage extends State<GalleryEditPage> {
               ),
             ],
           ),
-          body: SingleChildScrollView(
+          body: MyScrollView(
             child: Column(
               children: [
                 /// ****************************************

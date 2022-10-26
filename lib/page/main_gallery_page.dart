@@ -6,6 +6,8 @@ import 'package:novelai_manager/page/gallery_edit_page.dart';
 import 'package:novelai_manager/page/prompt_info_page.dart';
 import 'package:novelai_manager/repository/gallery_data_repository.dart';
 
+import '../components/widget/my_scroll_view.dart';
+
 /// 起動時に最初に表示されるページ
 /// プロンプトデータ一覧のギャラリーが表示される
 class MainGalleryPage extends StatefulWidget {
@@ -91,7 +93,7 @@ class _MainGalleryPageState extends State<MainGalleryPage> {
         icon: const Icon(Icons.photo),
         label: const Text("ギャラリーを追加"),
       ),
-      body: SingleChildScrollView(
+      body: MyScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8),
           child: Center(
