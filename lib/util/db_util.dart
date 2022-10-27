@@ -6,10 +6,17 @@ class DBUtil {
   /// データベースを保存するベースディレクトリを返す
   static Future<Directory> getDataBaseFolder() async {
     //実行ファイルがあるフォルダの場所
-    final exeFolderPath = File(Platform.resolvedExecutable).parent.path;
+    var exeFolderPath = File(Platform.resolvedExecutable).parent;
+
+    /// MacOSだと"Folder/novelai_manager.app/Contents/MacOS"となり
+    /// windowsでいうexeファイルの中になってしまうので(中のファイルを開いて編集することはできるけど)
+    /// .appがあるフォルダまで戻る
+    if (Platform.isMacOS) {
+      exeFolderPath = exeFolderPath.parent.parent.parent;
+    }
     //データベースのディレクトリ
     final dbDir =
-        Directory("$exeFolderPath/${NovelAIManager.baseDBFolderName}");
+        Directory("${exeFolderPath.path}/${NovelAIManager.baseDBFolderName}");
 
     //ディレクトリが無い場合は作成する
     if (!await dbDir.exists()) {
