@@ -13,6 +13,11 @@ class MyScrollView extends StatelessWidget {
   Widget build(BuildContext context) {
     //ポインターのイベントを受け取る
     return Listener(
+      // トラックパッドを二本指で操作したときのイベント
+      onPointerPanZoomUpdate: (event) {
+        var scrollPosition = _scrollController.offset - event.localPanDelta.dy;
+        _scrollController.jumpTo(scrollPosition);
+      },
       onPointerSignal: (event) async {
         //スクロールイベントだったら
         if (event is PointerScrollEvent) {
