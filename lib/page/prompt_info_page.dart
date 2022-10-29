@@ -116,15 +116,9 @@ class _PromptInfoPageState extends State<PromptInfoPage> {
                     if (!snapshot.hasData) {
                       return const Text("読み込み中...");
                     } else {
-                      /// データがエラーだったらエラー文をそのままテキストに出す
-                      /// 正常に取得できた場合は画像を表示
-                      if (snapshot.hasError) {
-                        return Text(snapshot.error.toString());
-                      } else {
-                        return Image.file(
-                          File(snapshot.data!),
-                        );
-                      }
+                      return Image.file(
+                        File(snapshot.data!),
+                      );
                     }
                   },
                 ),

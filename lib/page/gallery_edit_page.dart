@@ -289,14 +289,7 @@ class _GalleryEditPage extends State<GalleryEditPage> {
                         builder: (context, snapshot) {
                           /// データが届いているかどうか
                           if (snapshot.hasData) {
-                            /// ファイルパスが正常に返ってきたかどうか
-                            if (!snapshot.hasError) {
-                              /// 正常に返ってきた場合は画像を表示する
-                              return Image.file(File(snapshot.data!));
-                            } else {
-                              /// エラーが発生した場合はエラーメッセージを表示する
-                              return Text("エラーが発生しました: ${snapshot.error}");
-                            }
+                            return Image.file(File(snapshot.data!));
                           } else {
                             /// データが届いていない場合は読み込み中テキストを表示する
                             return const Text("読み込み中...");
