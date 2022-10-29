@@ -26,21 +26,17 @@ class GalleryCard extends StatelessWidget {
       future: DBUtil.getImageFullPath(imageData.imagePath),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.hasError) {
-            return Text(snapshot.error.toString());
-          } else {
-            /// Inkでリップルエフェクトが付く画像を作成
-            /// BoxDecorationで画像を指定することで角丸にできる
-            return Ink(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                image: DecorationImage(
-                  image: FileImage(File(snapshot.data!)),
-                  fit: BoxFit.cover,
-                ),
+          /// Inkでリップルエフェクトが付く画像を作成
+          /// BoxDecorationで画像を指定することで角丸にできる
+          return Ink(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              image: DecorationImage(
+                image: FileImage(File(snapshot.data!)),
+                fit: BoxFit.cover,
               ),
-            );
-          }
+            ),
+          );
         } else {
           return const Text("読み込み中...");
         }

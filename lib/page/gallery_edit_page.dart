@@ -192,8 +192,9 @@ class _GalleryEditPage extends State<GalleryEditPage> {
     }
 
     for (var item in imageFilePathList) {
+      final path = await DBUtil.getImageFullPath(item);
       //コピー元のファイル
-      final originalFile = File(await DBUtil.getImageFullPath(item));
+      final originalFile = File(path!);
       //コピー先のファイルパス
       final copyPath = "${copyDir.path}/${basename(originalFile.path)}";
 
