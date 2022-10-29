@@ -366,9 +366,12 @@ class _PromptInfoPageState extends State<PromptInfoPage> {
                           "Undesired Content:",
                           style: theme.textTheme.bodyLarge,
                         ),
-                        Text(
-                          "[ ${NAIUndesiredContent.getNameByValue(promptData.undesiredContent)} ]",
-                          style: theme.textTheme.headline6,
+                        Flexible(
+                          child: Text(
+                            "[ ${NAIUndesiredContent.getNameByValue(promptData.undesiredContent)} ]",
+                            style: theme.textTheme.headline6,
+                            softWrap: false,
+                          ),
                         ),
                       ],
                     ),
@@ -455,7 +458,8 @@ class _PromptInfoPageState extends State<PromptInfoPage> {
                       style: theme.textTheme.headline5,
                     ),
                     const SizedBox(height: 16),
-                    Row(
+                    Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         //-----横幅テキストフィールド-----
                         SizedBox(
