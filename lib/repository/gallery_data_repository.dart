@@ -103,9 +103,9 @@ class GalleryDataRepository {
         Directory? deleteDir;
         for (var item in imageList) {
           try {
+            final path = await DBUtil.getImageFullPath(item.imagePath);
             //削除対象のファイル
-            final deleteFile =
-                File(await DBUtil.getImageFullPath(item.imagePath));
+            final deleteFile = File(path!);
             if (await deleteFile.exists()) {
               /// 削除対象のディレクトリがnullだったら
               /// 削除対象のファイルの親ディレクトリを取得して入れる
