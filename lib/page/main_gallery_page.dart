@@ -80,7 +80,7 @@ class _MainGalleryPageState extends State<MainGalleryPage> {
             tooltip: "データベースフォルダを開く",
             onPressed: () async {
               final dbFilePath = await DBUtil.getDataBaseFolder();
-              await launchUrl(Uri.parse("file://${dbFilePath.path}"));
+              await launchUrl(Uri.parse("file:${dbFilePath.path}"));
             },
             icon: const Icon(Icons.folder),
           ),
