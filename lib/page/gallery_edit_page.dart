@@ -485,6 +485,16 @@ class _GalleryEditPage extends State<GalleryEditPage> {
                     ));
                     return;
                   }
+
+                  /// 空白から始まるタイトルの場合はエラースナックバーを出す
+                  if (galleryData.title[0] == " " ||
+                      galleryData.title[0] == "　") {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text("空白から始まるタイトルは設定できません"),
+                      duration: Duration(milliseconds: 1200),
+                    ));
+                    return;
+                  }
                   await saveGallery(context);
                 },
                 icon: const Icon(Icons.save),
