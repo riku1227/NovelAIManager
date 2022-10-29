@@ -5,6 +5,9 @@ import 'package:novelai_manager/novelai_manager.dart';
 import 'package:novelai_manager/page/gallery_edit_page.dart';
 import 'package:novelai_manager/page/prompt_info_page.dart';
 import 'package:novelai_manager/repository/gallery_data_repository.dart';
+import 'package:novelai_manager/util/db_util.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../components/widget/my_scroll_view.dart';
 
@@ -73,6 +76,14 @@ class _MainGalleryPageState extends State<MainGalleryPage> {
       appBar: AppBar(
         title: const Text("NovelAI Manager"),
         actions: [
+          IconButton(
+            tooltip: "データベースフォルダを開く",
+            onPressed: () async {
+              final dbFilePath = await DBUtil.getDataBaseFolder();
+              await launchUrl(Uri.parse("file://${dbFilePath.path}"));
+            },
+            icon: const Icon(Icons.folder),
+          ),
           IconButton(
             onPressed: () {
               showAboutDialog(
