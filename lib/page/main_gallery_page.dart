@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:novelai_manager/components/gallery_card.dart';
 import 'package:novelai_manager/model/schema/gallery_schema.dart';
@@ -80,7 +82,15 @@ class _MainGalleryPageState extends State<MainGalleryPage> {
             tooltip: "データベースフォルダを開く",
             onPressed: () async {
               final dbFilePath = await DBUtil.getDataBaseFolder();
-              await launchUrl(Uri.parse("file:${dbFilePath.path}"));
+              final url = "file:${dbFilePath.path}";
+
+              /// Windowsで"launchUrl"だとURLに日本語が含まれている場合開かなかった
+              /// macOSは"launchUrlString"を使うとエラーを吐くのとDBの保存場所的に多分日本語は入ってこない
+              if (Platform.isWindows) {
+                launchUrlString(url);
+              } else if (Platform.isMacOS) {
+                launchUrl(Uri.parse(url));
+              }
             },
             icon: const Icon(Icons.folder),
           ),
