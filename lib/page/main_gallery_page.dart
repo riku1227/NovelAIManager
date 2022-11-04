@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -12,6 +13,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import '../components/widget/my_scroll_view.dart';
+import '../model/json/nai_parameter.dart';
+import '../prompt/image_metadata/png_metadata.dart';
 
 /// 起動時に最初に表示されるページ
 /// プロンプトデータ一覧のギャラリーが表示される
