@@ -71,8 +71,8 @@ class PNGMetaData {
     }
 
     //パラメーター (Stable Diffusion web UIのパラメーター)
-    if (chunkDataMap.containsKey("tEXtParameters")) {
-      parameters = utf8.decode(chunkDataMap["tEXtParameters"]!.toList());
+    if (chunkDataMap.containsKey("tEXtparameters")) {
+      parameters = utf8.decode(chunkDataMap["tEXtparameters"]!.toList());
     }
 
     //メタデータの種類を判別
