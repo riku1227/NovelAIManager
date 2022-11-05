@@ -114,6 +114,28 @@ class _MainGalleryPageState extends State<MainGalleryPage> {
           ),
         ],
       ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            DrawerHeader(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 82,
+                    height: 82,
+                    child: Image.asset("assets/images/icon.png"),
+                  ),
+                  Text(
+                    "NovelAI Manager",
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.push(context, GalleryEditPage.getRoute());
