@@ -9,6 +9,7 @@ import 'package:novelai_manager/components/widget/my_scroll_view.dart';
 import 'package:novelai_manager/components/widget/outline_container.dart';
 import 'package:novelai_manager/prompt/image_metadata/metadata_type.dart';
 import 'package:novelai_manager/prompt/image_metadata/png_metadata.dart';
+import 'package:novelai_manager/prompt/image_metadata/web_ui_metadata.dart';
 import 'package:novelai_manager/util/general_util.dart';
 import 'package:path/path.dart';
 
@@ -201,6 +202,9 @@ class _PNGMetaDataViewerPageState extends State<PNGMetaDataViewerPage> {
 
   /// メタデータのrawデータを表示する
   Widget buildRawMetaData() {
+    if (pngMetaData == null) {
+      return Column();
+    }
     if (pngMetaData!.metaDataType != MetaDataType.NOVELAI) {
       return Column();
     }
