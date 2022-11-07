@@ -199,6 +199,35 @@ class _PNGMetaDataViewerPageState extends State<PNGMetaDataViewerPage> {
     );
   }
 
+  /// メタデータのrawデータを表示する
+  Widget buildRawMetaData() {
+    if (pngMetaData!.metaDataType != MetaDataType.NOVELAI) {
+      return Column();
+    }
+
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text("Raw"),
+          OutlineContainer(
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: SelectableText("""title: ${pngMetaData!.title}
+
+description: ${pngMetaData!.description}
+
+comment: ${pngMetaData!.comment}
+
+source: ${pngMetaData!.source}"""),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   /// ----- 左側のUI -----
   Widget buildLeftArea(BuildContext context) {
     return Padding(
@@ -209,6 +238,8 @@ class _PNGMetaDataViewerPageState extends State<PNGMetaDataViewerPage> {
           const SizedBox(height: 16),
           //----- 画像情報カード -----
           buildImageInformation(context),
+          //----- rawデータ -----
+          buildRawMetaData(),
         ],
       ),
     );
@@ -421,20 +452,6 @@ class _PNGMetaDataViewerPageState extends State<PNGMetaDataViewerPage> {
               ],
             ),
           ],
-        ),
-        const Divider(height: 24),
-        const Text("Raw"),
-        OutlineContainer(
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: SelectableText("""title: ${pngMetaData!.title}
-
-description: ${pngMetaData!.description}
-
-comment: ${pngMetaData!.comment}
-
-source: ${pngMetaData!.source}"""),
-          ),
         ),
       ],
     );
