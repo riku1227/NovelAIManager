@@ -33,6 +33,10 @@ class PNGMetaData {
   ///   | - ステップ数やシード値、ネガティブプロンプトなどの情報がJson形式で入っている
   String comment = "";
 
+  /// ソース (NovelAI専用)
+  ///   | - 生成に使用したモデルの情報 「Stable Diffusion 81274D13」など
+  String source = "";
+
   /// パラメーター (Stable Diffusion web UI専用)
   ///   | - プロンプトやステップ数、シード値、ネガティブプロンプトなどのデータが独自形式で入っている
   String parameters = "";
@@ -73,6 +77,11 @@ class PNGMetaData {
     //パラメーター (Stable Diffusion web UIのパラメーター)
     if (chunkDataMap.containsKey("tEXtparameters")) {
       parameters = utf8.decode(chunkDataMap["tEXtparameters"]!.toList());
+    }
+
+    //ソース (NovelAIのパラメーター)
+    if (chunkDataMap.containsKey("tEXtSource")) {
+      source = utf8.decode(chunkDataMap["tEXtSource"]!.toList());
     }
 
     //メタデータの種類を判別

@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:novelai_manager/components/dialog/prompt_convert_dialog.dart';
 import 'package:novelai_manager/components/dialog/simple_alert_dialog.dart';
 import 'package:novelai_manager/components/widget/outline_container.dart';
@@ -10,6 +9,7 @@ import 'package:novelai_manager/model/nai_undesired_content.dart';
 import 'package:novelai_manager/page/gallery_edit_page.dart';
 import 'package:novelai_manager/repository/gallery_data_repository.dart';
 import 'package:novelai_manager/util/db_util.dart';
+import 'package:novelai_manager/util/general_util.dart';
 
 import '../components/widget/long_press_icon_button.dart';
 import '../components/widget/my_scroll_view.dart';
@@ -51,22 +51,6 @@ class _PromptInfoPageState extends State<PromptInfoPage> {
   final imageWidthTextController = TextEditingController();
   //縦幅解像度のテキストフィールド用コントローラー
   final imageHeightTextController = TextEditingController();
-
-  /// クリップボードにテキストをコピーする
-  /// コピー後スナックバーでメッセージが表示される
-  Future<void> copyToClipboard(BuildContext context, String copyText) async {
-    /// 非同期処理した後にBuildContextを扱うとエラーを吐く
-    /// なので処理前にBuildContextを使ってメッセンジャーを取得しておく
-    final messenger = ScaffoldMessenger.of(context);
-    final data = ClipboardData(text: copyText);
-    await Clipboard.setData(data);
-
-    messenger.showSnackBar(
-      const SnackBar(
-          duration: Duration(milliseconds: 800),
-          content: Text("クリップボードにコピーしました")),
-    );
-  }
 
   /// ギャラリーデータを削除する
   Future<void> deleteGallery(
@@ -171,12 +155,12 @@ class _PromptInfoPageState extends State<PromptInfoPage> {
                     if (!mounted) {
                       return;
                     }
-                    await copyToClipboard(context, convertResult);
+                    await GeneralUtil.copyToClipboard(context, convertResult);
                   }
                 },
                 onTap: () async {
                   /// クリップボードにコピー
-                  await copyToClipboard(
+                  await GeneralUtil.copyToClipboard(
                       context, promptTextControllerList[index].text);
                 },
                 icon: const Icon(Icons.copy),
@@ -218,12 +202,13 @@ class _PromptInfoPageState extends State<PromptInfoPage> {
               if (!mounted) {
                 return;
               }
-              await copyToClipboard(context, convertResult);
+              await GeneralUtil.copyToClipboard(context, convertResult);
             }
           },
           onTap: () async {
             //クリップボードにコピーする
-            await copyToClipboard(context, negativePromptTextController.text);
+            await GeneralUtil.copyToClipboard(
+                context, negativePromptTextController.text);
           },
           icon: const Icon(Icons.copy),
         ),
@@ -255,7 +240,7 @@ class _PromptInfoPageState extends State<PromptInfoPage> {
         //-----コピーボタン-----
         IconButton(
           onPressed: () async {
-            await copyToClipboard(context, seedTextController.text);
+            await GeneralUtil.copyToClipboard(context, seedTextController.text);
           },
           icon: const Icon(Icons.copy),
         ),
@@ -475,7 +460,7 @@ class _PromptInfoPageState extends State<PromptInfoPage> {
                         //-----横幅コピーアイコンボタン-----
                         IconButton(
                           onPressed: () async {
-                            await copyToClipboard(
+                            await GeneralUtil.copyToClipboard(
                                 context, imageWidthTextController.text);
                           },
                           icon: const Icon(Icons.copy),
@@ -501,7 +486,7 @@ class _PromptInfoPageState extends State<PromptInfoPage> {
                         //-----縦幅コピーアイコンボタン-----
                         IconButton(
                           onPressed: () async {
-                            await copyToClipboard(
+                            await GeneralUtil.copyToClipboard(
                                 context, imageHeightTextController.text);
                           },
                           icon: const Icon(Icons.copy),
