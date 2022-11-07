@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:novelai_manager/components/widget/copy_text_field.dart';
 import 'package:novelai_manager/components/widget/my_scroll_view.dart';
 import 'package:novelai_manager/components/widget/outline_container.dart';
 import 'package:novelai_manager/prompt/image_metadata/metadata_type.dart';
@@ -12,7 +13,6 @@ import 'package:novelai_manager/util/general_util.dart';
 import 'package:path/path.dart';
 
 import '../components/dialog/prompt_convert_dialog.dart';
-import '../components/widget/long_press_icon_button.dart';
 import '../model/json/nai_parameter.dart';
 
 class PNGMetaDataViewerPage extends StatefulWidget {
@@ -256,188 +256,137 @@ class _PNGMetaDataViewerPageState extends State<PNGMetaDataViewerPage> {
         const SizedBox(
           width: double.infinity,
         ),
+        //----- プロンプトテキストフィールド -----
         const Text("プロンプト"),
         const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: TextField(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: "プロンプト",
-                ),
-                maxLines: 3,
-                controller: promptTextController,
-              ),
+        CopyTextField(
+          textField: TextField(
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: "プロンプト",
             ),
-            const SizedBox(width: 4),
-            LongPressIconButton(
-              onLongPress: () async {
-                //変換ダイアログを表示して結果を取得
-                final convertResult = await showDialog(
-                    context: context,
-                    builder: (_) => PromptConvertDialog(
-                          prompt: promptTextController.text,
-                        ));
-                //結果がnullじゃなかったら
-                if (convertResult != null) {
-                  if (!mounted) {
-                    return;
-                  }
-                  await GeneralUtil.copyToClipboard(context, convertResult);
-                }
-              },
-              onTap: () async {
-                await GeneralUtil.copyToClipboard(
-                    context, promptTextController.text);
-              },
-              icon: const Icon(Icons.copy),
-            )
-          ],
+            maxLines: 3,
+            controller: promptTextController,
+          ),
+          onLongPress: (text) async {
+            //変換ダイアログを表示して結果を取得
+            final convertResult = await showDialog(
+                context: context,
+                builder: (_) => PromptConvertDialog(
+                      prompt: text,
+                    ));
+            //結果がnullじゃなかったら
+            if (convertResult != null) {
+              if (!mounted) {
+                return;
+              }
+              await GeneralUtil.copyToClipboard(context, convertResult);
+            }
+          },
         ),
         const SizedBox(height: 16),
+        //----- ネガティブプロンプトテキストフィールド -----
         const Text("ネガティブプロンプト"),
         const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: TextField(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: "ネガティブプロンプト",
-                ),
-                maxLines: 3,
-                controller: negativePromptTextController,
-              ),
+        CopyTextField(
+          textField: TextField(
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: "ネガティブプロンプト",
             ),
-            const SizedBox(width: 4),
-            LongPressIconButton(
-              onLongPress: () async {
-                //変換ダイアログを表示して結果を取得
-                final convertResult = await showDialog(
-                    context: context,
-                    builder: (_) => PromptConvertDialog(
-                          prompt: negativePromptTextController.text,
-                        ));
-                //結果がnullじゃなかったら
-                if (convertResult != null) {
-                  if (!mounted) {
-                    return;
-                  }
-                  await GeneralUtil.copyToClipboard(context, convertResult);
-                }
-              },
-              onTap: () async {
-                await GeneralUtil.copyToClipboard(
-                    context, negativePromptTextController.text);
-              },
-              icon: const Icon(Icons.copy),
-            )
-          ],
+            maxLines: 3,
+            controller: negativePromptTextController,
+          ),
+          onLongPress: (text) async {
+            //変換ダイアログを表示して結果を取得
+            final convertResult = await showDialog(
+                context: context,
+                builder: (_) => PromptConvertDialog(
+                      prompt: text,
+                    ));
+            //結果がnullじゃなかったら
+            if (convertResult != null) {
+              if (!mounted) {
+                return;
+              }
+              await GeneralUtil.copyToClipboard(context, convertResult);
+            }
+          },
         ),
         const SizedBox(height: 18),
+        //----- シード値テキストフィールド -----
         const Text("シード値"),
         const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: TextField(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: "Seed",
-                ),
-                controller: seedTextController,
-              ),
+        CopyTextField(
+          textField: TextField(
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: "Seed",
             ),
-            const SizedBox(width: 4),
-            IconButton(
-              onPressed: () {
-                GeneralUtil.copyToClipboard(context, seedTextController.text);
-              },
-              icon: const Icon(Icons.copy),
-            ),
-          ],
+            controller: seedTextController,
+          ),
         ),
         const SizedBox(height: 16),
+        //----- ステップ数/スケール テキストフィールド -----
         const Text("ステップ数 / スケール"),
         const SizedBox(height: 12),
         Row(
           children: [
             Expanded(
-              child: TextField(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: "Steps",
+              child: CopyTextField(
+                textField: TextField(
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: "Steps",
+                  ),
+                  controller: stepsTextController,
                 ),
-                controller: stepsTextController,
               ),
-            ),
-            const SizedBox(width: 4),
-            IconButton(
-              onPressed: () {
-                GeneralUtil.copyToClipboard(context, stepsTextController.text);
-              },
-              icon: const Icon(Icons.copy),
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: TextField(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: "Scale",
+              child: CopyTextField(
+                textField: TextField(
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: "Scale",
+                  ),
+                  controller: scaleTextController,
                 ),
-                controller: scaleTextController,
               ),
-            ),
-            const SizedBox(width: 4),
-            IconButton(
-              onPressed: () {
-                GeneralUtil.copyToClipboard(context, scaleTextController.text);
-              },
-              icon: const Icon(Icons.copy),
             ),
           ],
         ),
         const SizedBox(height: 16),
         const Divider(),
         const SizedBox(height: 8),
+        //----- Strength/Noise テキストフィールド -----
         const Text("Strength / Noise"),
         const SizedBox(height: 12),
         Row(
           children: [
             Expanded(
-              child: TextField(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: "Strength",
+              child: CopyTextField(
+                textField: TextField(
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: "Strength",
+                  ),
+                  controller: strengthTextController,
                 ),
-                controller: strengthTextController,
               ),
-            ),
-            const SizedBox(width: 4),
-            IconButton(
-              onPressed: () {
-                GeneralUtil.copyToClipboard(
-                    context, strengthTextController.text);
-              },
-              icon: const Icon(Icons.copy),
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: TextField(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: "Noise",
+              child: CopyTextField(
+                textField: TextField(
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: "Noise",
+                  ),
+                  controller: noiseTextController,
                 ),
-                controller: noiseTextController,
               ),
-            ),
-            const SizedBox(width: 4),
-            IconButton(
-              onPressed: () {
-                GeneralUtil.copyToClipboard(context, noiseTextController.text);
-              },
-              icon: const Icon(Icons.copy),
             ),
           ],
         ),

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:novelai_manager/components/dialog/prompt_convert_dialog.dart';
 import 'package:novelai_manager/components/dialog/simple_alert_dialog.dart';
+import 'package:novelai_manager/components/widget/copy_text_field.dart';
 import 'package:novelai_manager/components/widget/outline_container.dart';
 import 'package:novelai_manager/model/nai_base_model.dart';
 import 'package:novelai_manager/model/nai_undesired_content.dart';
@@ -130,42 +131,29 @@ class _PromptInfoPageState extends State<PromptInfoPage> {
 
         return Padding(
           padding: const EdgeInsets.only(top: 4, bottom: 4),
-          child: Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                  ),
-                  maxLines: 2,
-                  controller: promptTextControllerList[index],
-                ),
+          child: CopyTextField(
+            textField: TextField(
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
               ),
-              //コピーボタン
-              LongPressIconButton(
-                onLongPress: () async {
-                  //変換ダイアログを表示して結果を取得
-                  final convertResult = await showDialog(
-                      context: context,
-                      builder: (_) => PromptConvertDialog(
-                            prompt: promptTextControllerList[index].text,
-                          ));
-                  //結果がnullじゃなかったら
-                  if (convertResult != null) {
-                    if (!mounted) {
-                      return;
-                    }
-                    await GeneralUtil.copyToClipboard(context, convertResult);
-                  }
-                },
-                onTap: () async {
-                  /// クリップボードにコピー
-                  await GeneralUtil.copyToClipboard(
-                      context, promptTextControllerList[index].text);
-                },
-                icon: const Icon(Icons.copy),
-              ),
-            ],
+              maxLines: 2,
+              controller: promptTextControllerList[index],
+            ),
+            onLongPress: (text) async {
+              //変換ダイアログを表示して結果を取得
+              final convertResult = await showDialog(
+                  context: context,
+                  builder: (_) => PromptConvertDialog(
+                        prompt: promptTextControllerList[index].text,
+                      ));
+              //結果がnullじゃなかったら
+              if (convertResult != null) {
+                if (!mounted) {
+                  return;
+                }
+                await GeneralUtil.copyToClipboard(context, convertResult);
+              }
+            },
           ),
         );
       }),
@@ -177,42 +165,29 @@ class _PromptInfoPageState extends State<PromptInfoPage> {
     //テキストコントローラーにネガティブプロンプトのテキストをセット
     negativePromptTextController.text = promptData.undesiredPrompt[0];
 
-    return Row(
-      children: [
-        Expanded(
-          child: TextField(
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-            ),
-            maxLines: 2,
-            controller: negativePromptTextController,
-          ),
+    return CopyTextField(
+      textField: TextField(
+        decoration: const InputDecoration(
+          border: OutlineInputBorder(),
         ),
-        //コピーボタン
-        LongPressIconButton(
-          onLongPress: () async {
-            //変換ダイアログを表示して結果を取得
-            final convertResult = await showDialog(
-                context: context,
-                builder: (_) => PromptConvertDialog(
-                      prompt: negativePromptTextController.text,
-                    ));
-            //結果がnullじゃなかったら
-            if (convertResult != null) {
-              if (!mounted) {
-                return;
-              }
-              await GeneralUtil.copyToClipboard(context, convertResult);
-            }
-          },
-          onTap: () async {
-            //クリップボードにコピーする
-            await GeneralUtil.copyToClipboard(
-                context, negativePromptTextController.text);
-          },
-          icon: const Icon(Icons.copy),
-        ),
-      ],
+        maxLines: 2,
+        controller: negativePromptTextController,
+      ),
+      onLongPress: (text) async {
+        //変換ダイアログを表示して結果を取得
+        final convertResult = await showDialog(
+            context: context,
+            builder: (_) => PromptConvertDialog(
+                  prompt: negativePromptTextController.text,
+                ));
+        //結果がnullじゃなかったら
+        if (convertResult != null) {
+          if (!mounted) {
+            return;
+          }
+          await GeneralUtil.copyToClipboard(context, convertResult);
+        }
+      },
     );
   }
 
@@ -225,26 +200,14 @@ class _PromptInfoPageState extends State<PromptInfoPage> {
     /// が付いてくるからそれを消す処理を入れる
     seedTextController.text =
         promptData.seed.toString().replaceAll("null", "").replaceAll(".0", "");
-    return Row(
-      children: [
-        //-----テキストフィールド-----
-        Expanded(
-          child: TextField(
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-            ),
-            maxLines: 1,
-            controller: seedTextController,
-          ),
+    return CopyTextField(
+      textField: TextField(
+        decoration: const InputDecoration(
+          border: OutlineInputBorder(),
         ),
-        //-----コピーボタン-----
-        IconButton(
-          onPressed: () async {
-            await GeneralUtil.copyToClipboard(context, seedTextController.text);
-          },
-          icon: const Icon(Icons.copy),
-        ),
-      ],
+        maxLines: 1,
+        controller: seedTextController,
+      ),
     );
   }
 
@@ -448,22 +411,16 @@ class _PromptInfoPageState extends State<PromptInfoPage> {
                       children: [
                         //-----横幅テキストフィールド-----
                         SizedBox(
-                          width: 160,
-                          child: TextField(
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: "横幅",
+                          width: 200,
+                          child: CopyTextField(
+                            textField: TextField(
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: "横幅",
+                              ),
+                              controller: imageWidthTextController,
                             ),
-                            controller: imageWidthTextController,
                           ),
-                        ),
-                        //-----横幅コピーアイコンボタン-----
-                        IconButton(
-                          onPressed: () async {
-                            await GeneralUtil.copyToClipboard(
-                                context, imageWidthTextController.text);
-                          },
-                          icon: const Icon(Icons.copy),
                         ),
 
                         //---------------------
@@ -474,22 +431,16 @@ class _PromptInfoPageState extends State<PromptInfoPage> {
 
                         //-----縦幅テキストフィールド-----
                         SizedBox(
-                          width: 160,
-                          child: TextField(
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: "縦幅",
+                          width: 200,
+                          child: CopyTextField(
+                            textField: TextField(
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: "縦幅",
+                              ),
+                              controller: imageHeightTextController,
                             ),
-                            controller: imageHeightTextController,
                           ),
-                        ),
-                        //-----縦幅コピーアイコンボタン-----
-                        IconButton(
-                          onPressed: () async {
-                            await GeneralUtil.copyToClipboard(
-                                context, imageHeightTextController.text);
-                          },
-                          icon: const Icon(Icons.copy),
                         ),
                       ],
                     ),
