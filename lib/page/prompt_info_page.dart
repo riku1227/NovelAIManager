@@ -83,34 +83,63 @@ class _PromptInfoPageState extends State<PromptInfoPage> {
   ///  | 登録されている画像のリスト
   Widget buildLeftAreaWidget(PromptData promptData) {
     return MyScrollView(
-      child: ListView.builder(
-        shrinkWrap: true,
-        itemCount: promptData.generatedImageList.length,
-        itemBuilder: ((context, index) {
-          return SizedBox(
-            height: 512,
+      child: Column(
+        children: [
+          /// ****************************************
+          /// ---------- ギャラリー情報カード ----------
+          /// ****************************************
+          ///   | タイトルとか説明とか
+          Card(
             child: Padding(
-              padding: const EdgeInsets.all(4),
-              child: OutlineContainer(
-                child: FutureBuilder(
-                  //DBに保存されている相対パスから画像ファイルのフルパスを取得
-                  future: DBUtil.getImageFullPath(
-                      promptData.generatedImageList[index].imagePath),
-                  builder: (context, snapshot) {
-                    //データがまだ届いてない場合は読み込み中のテキストを出す
-                    if (!snapshot.hasData) {
-                      return const Text("読み込み中...");
-                    } else {
-                      return Image.file(
-                        File(snapshot.data!),
-                      );
-                    }
-                  },
-                ),
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    width: double.infinity,
+                  ),
+                  // タイトルテキスト
+                  Text(
+                    widget.galleryData.title,
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
+                  // 説明テキスト
+                  Text(promptData.description),
+                ],
               ),
             ),
-          );
-        }),
+          ),
+          const SizedBox(height: 8),
+          ListView.builder(
+            shrinkWrap: true,
+            itemCount: promptData.generatedImageList.length,
+            itemBuilder: ((context, index) {
+              return SizedBox(
+                height: 512,
+                child: Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: OutlineContainer(
+                    child: FutureBuilder(
+                      //DBに保存されている相対パスから画像ファイルのフルパスを取得
+                      future: DBUtil.getImageFullPath(
+                          promptData.generatedImageList[index].imagePath),
+                      builder: (context, snapshot) {
+                        //データがまだ届いてない場合は読み込み中のテキストを出す
+                        if (!snapshot.hasData) {
+                          return const Text("読み込み中...");
+                        } else {
+                          return Image.file(
+                            File(snapshot.data!),
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                ),
+              );
+            }),
+          ),
+        ],
       ),
     );
   }
@@ -233,219 +262,192 @@ class _PromptInfoPageState extends State<PromptInfoPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             /// ****************************************
-            /// ---------- ギャラリー情報カード ----------
+            /// ---------- 基本設定カード ----------
             /// ****************************************
-            ///   | タイトルとか説明とか
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      width: double.infinity,
-                    ),
-                    // タイトルテキスト
-                    Text(
-                      galleryData.title,
-                      style: theme.textTheme.headline5,
-                    ),
-                    // 説明テキスト
-                    Text(promptData.description),
-                  ],
-                ),
+            ///   | プロンプトとか使用モデルとか
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "基本設定",
+                    style: theme.textTheme.headline6,
+                  ),
+                  const SizedBox(height: 8),
+                  //ベースモデルテキスト
+                  Text(
+                    "モデル",
+                    style: theme.textTheme.caption,
+                  ),
+                  Text(
+                    NAIBaseModel.getNameByValue(promptData.baseModel),
+                    style: theme.textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    "プロント",
+                    style: theme.textTheme.subtitle1,
+                  ),
+                  buildPromptListView(promptData),
+                ],
               ),
             ),
             const SizedBox(height: 8),
 
-            /// ****************************************
-            /// ---------- 基本設定カード ----------
-            /// ****************************************
-            ///   | プロンプトとか使用モデルとか
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(width: double.infinity),
-                    Text(
-                      "基本設定",
-                      style: theme.textTheme.headline5,
-                    ),
-                    //ベースモデルテキスト
-                    Text(
-                      "モデル: ${NAIBaseModel.getNameByValue(promptData.baseModel)}",
-                      style: theme.textTheme.headline6,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      "プロント",
-                      style: theme.textTheme.subtitle1,
-                    ),
-                    buildPromptListView(promptData),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 8),
+            const Divider(),
 
             /// ****************************************
             /// ---------- Model-Specific Settingsカード----------
             /// ****************************************
             ///   | Undesired Contentとかネガティブプロンプトとか
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(width: double.infinity),
-                    Text(
-                      "Model-Specific Settings",
-                      style: Theme.of(context).textTheme.headline5,
-                    ),
-                    const SizedBox(height: 8),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Model-Specific Settings",
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  const SizedBox(height: 8),
 
-                    /// -----Undesired Contentテキスト-----
-                    Row(
-                      children: [
-                        Text(
-                          "Undesired Content:",
-                          style: theme.textTheme.bodyLarge,
-                        ),
-                        Flexible(
-                          child: Text(
-                            "[ ${NAIUndesiredContent.getNameByValue(promptData.undesiredContent)} ]",
-                            style: theme.textTheme.headline6,
-                            softWrap: false,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
+                  /// -----Undesired Contentテキスト-----
+                  Text(
+                    "Undesired Content",
+                    style: theme.textTheme.caption,
+                  ),
+                  Text(
+                    NAIUndesiredContent.getNameByValue(
+                        promptData.undesiredContent),
+                    style: theme.textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 8),
 
-                    /// -----ネガティブプロンプト-----
-                    Text(
-                      "ネガティブ(Undesired Content)プロンプト",
-                      style: theme.textTheme.subtitle1,
-                    ),
-                    buildNegativePrompt(promptData),
-                    const SizedBox(height: 8),
+                  /// -----ネガティブプロンプト-----
+                  Text(
+                    "ネガティブプロンプト",
+                    style: theme.textTheme.subtitle1,
+                  ),
+                  const SizedBox(height: 4),
+                  buildNegativePrompt(promptData),
+                  const SizedBox(height: 8),
 
-                    ///-----クオリティタグ-----
-                    CheckboxListTile(
+                  ///-----クオリティタグ-----
+                  SizedBox(
+                    width: 310,
+                    child: CheckboxListTile(
                       title: const Text("クオリティタグを自動的に追加する"),
                       controlAffinity: ListTileControlAffinity.leading,
                       value: promptData.addQualityTag,
                       onChanged: (value) {},
                     ),
+                  ),
 
-                    //-----Steps, Scale, Seed-----
-                    Row(
-                      children: [
-                        // ---Steps---
-                        Expanded(
-                          flex: 7,
-                          child: Row(
-                            children: [
-                              const Text("Steps"),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: TextField(
-                                  controller: stepsTextController,
-                                ),
+                  //-----Steps, Scale, Seed-----
+                  Row(
+                    children: [
+                      // ---Steps---
+                      Expanded(
+                        flex: 5,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text("Steps"),
+                            const SizedBox(width: 8),
+                            CopyTextField(
+                              textField: TextField(
+                                controller: stepsTextController,
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                        // ---Scale---
-                        Expanded(
-                          flex: 3,
-                          child: Row(
-                            children: [
-                              const Text("Scale"),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: TextField(
-                                  controller: scaleTextController,
-                                ),
+                      ),
+                      const SizedBox(width: 16),
+                      // ---Scale---
+                      Expanded(
+                        flex: 5,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text("Scale"),
+                            const SizedBox(width: 8),
+                            CopyTextField(
+                              textField: TextField(
+                                controller: scaleTextController,
                               ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    //---Seed---
-                    Text(
-                      "Seed",
-                      style: theme.textTheme.subtitle1,
-                    ),
-                    buildSeedTextField(promptData),
-                  ],
-                ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  //---Seed---
+                  Text(
+                    "Seed",
+                    style: theme.textTheme.subtitle1,
+                  ),
+                  buildSeedTextField(promptData),
+                ],
               ),
             ),
             const SizedBox(height: 8),
+            const Divider(),
 
             /// ****************************************
             /// ---------- 画像設定----------
             /// ****************************************
             ///   | 解像度とか
-            /// TODO
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(width: double.infinity),
-                    Text(
-                      "画像設定",
-                      style: theme.textTheme.headline5,
-                    ),
-                    const SizedBox(height: 16),
-                    Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: [
-                        //-----横幅テキストフィールド-----
-                        SizedBox(
-                          width: 200,
-                          child: CopyTextField(
-                            textField: TextField(
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: "横幅",
-                              ),
-                              controller: imageWidthTextController,
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "画像設定",
+                    style: theme.textTheme.headline6,
+                  ),
+                  const SizedBox(height: 16),
+                  Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      //-----横幅テキストフィールド-----
+                      SizedBox(
+                        width: 200,
+                        child: CopyTextField(
+                          textField: TextField(
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: "横幅",
                             ),
+                            controller: imageWidthTextController,
                           ),
                         ),
+                      ),
 
-                        //---------------------
-                        const SizedBox(width: 8),
-                        const Text("X"),
-                        const SizedBox(width: 8),
-                        //---------------------
+                      //---------------------
+                      const SizedBox(width: 8),
+                      const Text("X"),
+                      const SizedBox(width: 8),
+                      //---------------------
 
-                        //-----縦幅テキストフィールド-----
-                        SizedBox(
-                          width: 200,
-                          child: CopyTextField(
-                            textField: TextField(
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: "縦幅",
-                              ),
-                              controller: imageHeightTextController,
+                      //-----縦幅テキストフィールド-----
+                      SizedBox(
+                        width: 200,
+                        child: CopyTextField(
+                          textField: TextField(
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: "縦幅",
                             ),
+                            controller: imageHeightTextController,
                           ),
                         ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ],
