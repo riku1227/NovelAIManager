@@ -40,7 +40,7 @@ NovelAIのプロンプトなどを良い感じに保存しておけるソフト�
 * * *
 <h3>メイン機能</h3>
 <img src="https://user-images.githubusercontent.com/17927874/200830751-1f81d8c6-9818-4933-9c51-6ee6a80f4890.png" width="45%">
-<img src="https://user-images.githubusercontent.com/17927874/200832012-20fc25ae-07f3-4d71-ba2c-090dfd6865f2.png" width="45%">
+<img src="https://user-images.githubusercontent.com/17927874/200839915-308a1d9a-5751-4fbe-baca-406416c7114e.png" width="45%">
 <p></p>
 <img src="https://user-images.githubusercontent.com/17927874/200832356-305a8297-c823-4b95-b016-3fe356272788.png" width="45%">
 <img src="https://user-images.githubusercontent.com/17927874/200832273-ab08c0b7-b893-49a0-b32c-ddb07a13f66e.png" width="45%">
