@@ -15,11 +15,22 @@ class PromptConverter {
     //パースしたプロンプトのデータリスト
     List<PromptParseData> promptParseDataList = [];
 
+    /// 前回の位置
+    /// 同じインデックスで無限ループになったことを検知するために使う
+    var currentIndex = -1;
+
     while (index < srcPrompt.length) {
       //プロンプトの強度
       var power = 1.0;
       //プロンプトのテキスト部分
       var textPrompt = "";
+
+      /// currentIndexと同じだったら処理を終わる
+      if (currentIndex == index) {
+        break;
+      } else {
+        currentIndex = index;
+      }
 
       //空白をスキップする
       while (index < srcPrompt.length && srcPrompt[index] == " ") {
@@ -94,11 +105,22 @@ class PromptConverter {
     //パースしたプロンプトのデータリスト
     List<PromptParseData> promptParseDataList = [];
 
+    /// 前回の位置
+    /// 同じインデックスで無限ループになったことを検知するために使う
+    var currentIndex = -1;
+
     while (index < srcPrompt.length) {
       //プロンプトの強度
       var power = 1.0;
       //プロンプトのテキスト部分
       var textPrompt = "";
+
+      /// currentIndexと同じだったら処理を終わる
+      if (currentIndex == index) {
+        break;
+      } else {
+        currentIndex = index;
+      }
 
       //空白をスキップする
       while (index < srcPrompt.length && srcPrompt[index] == " ") {
