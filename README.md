@@ -36,10 +36,16 @@ NovelAIのプロンプトなどを良い感じに保存しておけるソフト�
 ### macOSの場合
 .appを入れ替えるだけで更新されます
 
-## 🖼️ 画像
+## 🖼️ スクリーンショット
 * * *
-![novelai_image](https://user-images.githubusercontent.com/17927874/195606048-d290e3c8-5bd9-494c-a263-36ae98bf423d.png)
-![novelai_manager_03](https://user-images.githubusercontent.com/17927874/195606701-e327b0e3-cb4b-4bef-919c-b75eda9d6764.png)
+<h3>メイン機能</h3>
+<img src="https://user-images.githubusercontent.com/17927874/200830751-1f81d8c6-9818-4933-9c51-6ee6a80f4890.png" width="45%">
+<img src="https://user-images.githubusercontent.com/17927874/200832012-20fc25ae-07f3-4d71-ba2c-090dfd6865f2.png" width="45%">
+<p></p>
+<img src="https://user-images.githubusercontent.com/17927874/200832356-305a8297-c823-4b95-b016-3fe356272788.png" width="45%">
+<img src="https://user-images.githubusercontent.com/17927874/200832273-ab08c0b7-b893-49a0-b32c-ddb07a13f66e.png" width="45%">
+<h3>PNGメタデータ表示機能</h3>
+<img src="https://user-images.githubusercontent.com/17927874/200832672-3994df48-fbbe-443d-ae24-435b03030e48.png" width="45%">
 
 ## 📄 詳細な情報
 * * *
@@ -77,11 +83,8 @@ NovelAIのプロンプトなどを良い感じに保存しておけるソフト�
 
 ## 🚀今後について
 * * *
-* UIをもうちょっと良い感じにしたい
-  * プロンプトの情報を見る画面とかかなり見にくい感じがする
-* データベースに保存されてる画像のクリーニング機能が欲しくはある
-* プロンプト情報の画像の順番を入れ替えれるようにしたい
-* あわよくばAndroidも... (iOSは無理)
+Projectページに書いていたりいなかったり  
+https://github.com/users/riku1227/projects/1/views/1  
 
 ## 📄サードパーティーライセンス
 * * *
