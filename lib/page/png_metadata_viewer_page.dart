@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:novelai_manager/components/widget/copy_text_field.dart';
 import 'package:novelai_manager/components/widget/my_scroll_view.dart';
 import 'package:novelai_manager/components/widget/outline_container.dart';
+import 'package:novelai_manager/prompt/image_metadata/generic_metadata.dart';
 import 'package:novelai_manager/prompt/image_metadata/metadata_type.dart';
 import 'package:novelai_manager/prompt/image_metadata/png_metadata.dart';
 import 'package:novelai_manager/prompt/image_metadata/web_ui_metadata.dart';
@@ -205,8 +206,24 @@ class _PNGMetaDataViewerPageState extends State<PNGMetaDataViewerPage> {
     if (pngMetaData == null) {
       return Column();
     }
-    if (pngMetaData!.metaDataType != MetaDataType.NOVELAI) {
+    if (pngMetaData!.metaDataType == MetaDataType.OTHER) {
       return Column();
+    }
+
+    var rawText = "";
+    //NovelAI
+    if (pngMetaData!.metaDataType == MetaDataType.NOVELAI) {
+      rawText = """title: ${pngMetaData!.title}
+
+description: ${pngMetaData!.description}
+
+comment: ${pngMetaData!.comment}
+
+source: ${pngMetaData!.source}""";
+    }
+    //Stable Diffusion web UI
+    else if (pngMetaData!.metaDataType == MetaDataType.STABLE_DIFFUSION_WEBUI) {
+      rawText = pngMetaData!.parameters;
     }
 
     return Padding(
@@ -218,13 +235,7 @@ class _PNGMetaDataViewerPageState extends State<PNGMetaDataViewerPage> {
           OutlineContainer(
             child: Padding(
               padding: const EdgeInsets.all(8),
-              child: SelectableText("""title: ${pngMetaData!.title}
-
-description: ${pngMetaData!.description}
-
-comment: ${pngMetaData!.comment}
-
-source: ${pngMetaData!.source}"""),
+              child: SelectableText(rawText),
             ),
           ),
         ],
@@ -249,32 +260,108 @@ source: ${pngMetaData!.source}"""),
     );
   }
 
+  // Stable Diffusion web UI方式のメタデータ情報を表示する
+  Widget buildWebUIMetaData(BuildContext context, WebUIMetaData metaData) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 16),
+        const Divider(),
+        const SizedBox(height: 8),
+        //----- ModelHash, Clip Skip, Denoising Strength -----
+        Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "ModelHash",
+                    style: theme.textTheme.caption,
+                  ),
+                  SelectableText(
+                    metaData.modelHash,
+                    style: theme.textTheme.titleMedium,
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Clip Skip",
+                    style: theme.textTheme.caption,
+                  ),
+                  SelectableText(
+                    metaData.clipSkip.toString(),
+                    style: theme.textTheme.titleMedium,
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Denoising Strength",
+                  style: theme.textTheme.caption,
+                ),
+                SelectableText(
+                  metaData.denoisingStrength.toString(),
+                  style: theme.textTheme.titleMedium,
+                )
+              ],
+            )),
+          ],
+        ),
+        const SizedBox(height: 12),
+        //----- サンプラー, ENSD -----
+        Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "サンプラー",
+                    style: theme.textTheme.caption,
+                  ),
+                  SelectableText(
+                    metaData.sampler,
+                    style: theme.textTheme.titleMedium,
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "ENSD",
+                    style: theme.textTheme.caption,
+                  ),
+                  SelectableText(
+                    metaData.ensd.toString(),
+                    style: theme.textTheme.titleMedium,
+                  ),
+                ],
+              ),
+            ),
+            //レイアウト調整用
+            const Expanded(child: SizedBox()),
+          ],
+        ),
+      ],
+    );
+  }
+
   // NovelAI方式のメタデータ情報を表示する
-  Widget buildNAIMetaData(BuildContext context) {
-    final naiParameter =
-        NAIParameter.fromJson(json.decode(pngMetaData!.comment));
-
-    //プロンプト
-    final promptTextController = TextEditingController();
-    promptTextController.text = pngMetaData!.description;
-
-    //ネガティブプロンプト
-    final negativePromptTextController = TextEditingController();
-    negativePromptTextController.text = naiParameter.uc;
-
-    //シード値
-    final seedTextController = TextEditingController();
-    seedTextController.text = naiParameter.seed.toString().replaceAll(".0", "");
-
-    //ステップ数
-    final stepsTextController = TextEditingController();
-    stepsTextController.text = naiParameter.steps.toString();
-
-    //スケール
-    final scaleTextController = TextEditingController();
-    scaleTextController.text =
-        naiParameter.scale.toString().replaceAll(".0", "");
-
+  Widget buildNAIMetaData(BuildContext context, NAIParameter naiParameter) {
     //ストレンジ
     final strengthTextController = TextEditingController();
     strengthTextController.text =
@@ -288,9 +375,101 @@ source: ${pngMetaData!.source}"""),
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(
-          width: double.infinity,
+        const SizedBox(height: 16),
+        const Divider(),
+        const SizedBox(height: 8),
+        //----- Strength/Noise テキストフィールド -----
+        const Text("Strength / Noise"),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: CopyTextField(
+                textField: TextField(
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: "Strength",
+                  ),
+                  controller: strengthTextController,
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: CopyTextField(
+                textField: TextField(
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: "Noise",
+                  ),
+                  controller: noiseTextController,
+                ),
+              ),
+            ),
+          ],
         ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Sampler",
+                  style: Theme.of(context).textTheme.caption,
+                ),
+                SelectableText(
+                  naiParameter.sampler,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ],
+            ),
+            const SizedBox(width: 16),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "モデル",
+                  style: Theme.of(context).textTheme.caption,
+                ),
+                SelectableText(
+                  pngMetaData!.source,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  /// プロンプトやネガティブプロンプト、ステップ / スケール / シード値 などの
+  /// どのメタデータタイプにも存在する汎用的な値を表示する
+  Widget buildGenericMetaData(BuildContext context, GenericMetaData metaData) {
+    //プロンプト
+    final promptTextController = TextEditingController();
+    promptTextController.text = metaData.prompt;
+
+    //ネガティブプロンプト
+    final negativePromptTextController = TextEditingController();
+    negativePromptTextController.text = metaData.negativePrompt;
+
+    //シード値
+    final seedTextController = TextEditingController();
+    seedTextController.text = metaData.seed.toString().replaceAll(".0", "");
+
+    //ステップ数
+    final stepsTextController = TextEditingController();
+    stepsTextController.text = metaData.steps.toString();
+
+    //スケール
+    final scaleTextController = TextEditingController();
+    scaleTextController.text = metaData.scale.toString().replaceAll(".0", "");
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
         //----- プロンプトテキストフィールド -----
         const Text("プロンプト"),
         const SizedBox(height: 12),
@@ -392,71 +571,6 @@ source: ${pngMetaData!.source}"""),
             ),
           ],
         ),
-        const SizedBox(height: 16),
-        const Divider(),
-        const SizedBox(height: 8),
-        //----- Strength/Noise テキストフィールド -----
-        const Text("Strength / Noise"),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: CopyTextField(
-                textField: TextField(
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "Strength",
-                  ),
-                  controller: strengthTextController,
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: CopyTextField(
-                textField: TextField(
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "Noise",
-                  ),
-                  controller: noiseTextController,
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        Row(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Sampler",
-                  style: Theme.of(context).textTheme.caption,
-                ),
-                SelectableText(
-                  naiParameter.sampler,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-              ],
-            ),
-            const SizedBox(width: 16),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "モデル",
-                  style: Theme.of(context).textTheme.caption,
-                ),
-                SelectableText(
-                  pngMetaData!.source,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-              ],
-            ),
-          ],
-        ),
       ],
     );
   }
@@ -471,12 +585,39 @@ source: ${pngMetaData!.source}"""),
       return const Text("メタデータが存在しないか、サポートしていない方式です");
     }
 
+    late GenericMetaData genericMetaData;
+    late NAIParameter naiParameter;
+    late WebUIMetaData webUIMetaData;
+
+    //NovelAI方式
+    if (pngMetaData!.metaDataType == MetaDataType.NOVELAI) {
+      naiParameter = NAIParameter.fromJson(json.decode(pngMetaData!.comment));
+      genericMetaData = GenericMetaData.fromNAIParameter(
+          pngMetaData!.description, naiParameter);
+    }
+
+    //Stable Diffusion web UI方式
+    if (pngMetaData!.metaDataType == MetaDataType.STABLE_DIFFUSION_WEBUI) {
+      webUIMetaData = WebUIMetaData(pngMetaData!.parameters);
+      genericMetaData = GenericMetaData.fromWebUIParameter(webUIMetaData);
+    }
+
     return Padding(
       padding: const EdgeInsets.all(8),
       child: MyScrollView(
-        child: pngMetaData!.metaDataType == MetaDataType.NOVELAI
-            ? buildNAIMetaData(context)
-            : const Text("サポートされていない形式のメタデータです"),
+        child: Column(
+          children: [
+            //汎用メタデータ
+            buildGenericMetaData(context, genericMetaData),
+            //NovelAI方式専用メタデータ
+            pngMetaData!.metaDataType == MetaDataType.NOVELAI
+                ? buildNAIMetaData(context, naiParameter)
+                : const SizedBox(),
+            pngMetaData!.metaDataType == MetaDataType.STABLE_DIFFUSION_WEBUI
+                ? buildWebUIMetaData(context, webUIMetaData)
+                : const SizedBox(),
+          ],
+        ),
       ),
     );
   }

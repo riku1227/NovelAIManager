@@ -11,6 +11,7 @@ import 'package:novelai_manager/components/widget/my_scroll_view.dart';
 import 'package:novelai_manager/components/widget/outline_container.dart';
 import 'package:novelai_manager/prompt/image_metadata/metadata_type.dart';
 import 'package:novelai_manager/prompt/image_metadata/png_metadata.dart';
+import 'package:novelai_manager/prompt/image_metadata/web_ui_metadata.dart';
 import 'package:novelai_manager/repository/gallery_data_repository.dart';
 import 'package:novelai_manager/util/db_util.dart';
 import 'package:novelai_manager/util/gallery_data_util.dart';
@@ -317,6 +318,51 @@ class _GalleryEditPage extends State<GalleryEditPage> {
     });
   }
 
+  /// Stable Diffusion web UI形式のPNGに埋め込まれたメタデータを読み込んで反映する
+  void loadWebUIPNGMetaData(PNGMetaData pngMetaData) {
+    final metaData = WebUIMetaData(pngMetaData.parameters);
+    setState(() {
+      isEditDirty = true;
+      final promptData = galleryData.promptData!;
+
+      /// クオリティタグを自動で付けるかどうか
+      ///   | - NovelAI固有機能はオフにする
+      promptData.addQualityTag = false;
+
+      //プロンプト
+      promptData.prompt.clear();
+      promptData.prompt.add(metaData.prompt);
+
+      /// Undesired Content
+      ///   | - NovelAI固有機能はオフにする
+      promptData.undesiredContent = NAIUndesiredContent.NONE.toString();
+
+      //ネガティブプロンプト
+      promptData.undesiredPrompt[0] = metaData.negativePrompt;
+      negativePromptTextController.text = metaData.negativePrompt;
+
+      //ステップ数
+      promptData.steps = metaData.steps;
+      stepsTextController.text = metaData.steps.toString();
+
+      //スケール
+      promptData.scale = metaData.scale.toInt();
+      scaleTextController.text = metaData.scale.toInt().toString();
+
+      //シード値
+      promptData.seed = metaData.seed;
+      seedTextController.text = metaData.seed.toString().replaceAll(".0", "");
+
+      //横幅
+      promptData.width = pngMetaData.width;
+      imageWidthTextController.text = pngMetaData.width.toString();
+
+      //縦幅
+      promptData.height = pngMetaData.height;
+      imageHeightTextController.text = pngMetaData.height.toString();
+    });
+  }
+
   /// 画像一覧を作成する
   /// アウトラインで囲まれた画像の横並びリスト
   Widget buildAddImageList(BuildContext context) {
@@ -490,8 +536,13 @@ class _GalleryEditPage extends State<GalleryEditPage> {
 
                 final pngMetaData = await PNGMetaData.getPNGMetaData(pngFile);
 
-                //Novel AI形式以外の画像の場合はエラースナックバーを表示して処理を終わる
-                if (pngMetaData.metaDataType != MetaDataType.NOVELAI) {
+                //対応していない形式の画像の場合はエラースナックバーを表示して処理を終わる
+                if (pngMetaData.metaDataType == MetaDataType.NOVELAI) {
+                  loadNovelAIPNGMetaData(pngMetaData);
+                } else if (pngMetaData.metaDataType ==
+                    MetaDataType.STABLE_DIFFUSION_WEBUI) {
+                  loadWebUIPNGMetaData(pngMetaData);
+                } else {
                   if (mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
@@ -501,8 +552,6 @@ class _GalleryEditPage extends State<GalleryEditPage> {
                   }
                   return;
                 }
-
-                loadNovelAIPNGMetaData(pngMetaData);
               }
             },
             icon: const Icon(Icons.read_more),
