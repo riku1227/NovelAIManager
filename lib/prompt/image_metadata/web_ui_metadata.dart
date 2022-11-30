@@ -56,9 +56,7 @@ class WebUIMetaData {
       if (item.startsWith("Negative prompt: ")) {
         mode = 1;
         item = item.replaceAll("Negative prompt: ", "");
-      } else if (item.contains("Steps: ") &&
-          item.contains("Sampler: ") &&
-          item.contains("Seed: ")) {
+      } else if (item.contains("Seed: ")) {
         mode = 2;
       }
 
