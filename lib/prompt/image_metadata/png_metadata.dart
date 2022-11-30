@@ -71,17 +71,35 @@ class PNGMetaData {
 
     //コメント (NovelAIのパラメーター)
     if (chunkDataMap.containsKey("tEXtComment")) {
-      comment = utf8.decode(chunkDataMap["tEXtComment"]!.toList());
+      comment = utf8
+          .decode(
+            chunkDataMap["tEXtComment"]!.toList(),
+            allowMalformed: true,
+          )
+          //不正な文字(NBSP[0xA0]など)として判定された文字を半角スペースに入れ替える
+          .replaceAll("\uFFFD", " ");
     }
 
     //パラメーター (Stable Diffusion web UIのパラメーター)
     if (chunkDataMap.containsKey("tEXtparameters")) {
-      parameters = utf8.decode(chunkDataMap["tEXtparameters"]!.toList());
+      parameters = utf8
+          .decode(
+            chunkDataMap["tEXtparameters"]!.toList(),
+            allowMalformed: true,
+          )
+          //不正な文字(NBSP[0xA0]など)として判定された文字を半角スペースに入れ替える
+          .replaceAll("\uFFFD", " ");
     }
 
     //ソース (NovelAIのパラメーター)
     if (chunkDataMap.containsKey("tEXtSource")) {
-      source = utf8.decode(chunkDataMap["tEXtSource"]!.toList());
+      source = utf8
+          .decode(
+            chunkDataMap["tEXtSource"]!.toList(),
+            allowMalformed: true,
+          )
+          //不正な文字(NBSP[0xA0]など)として判定された文字を半角スペースに入れ替える
+          .replaceAll("\uFFFD", " ");
     }
 
     //メタデータの種類を判別
