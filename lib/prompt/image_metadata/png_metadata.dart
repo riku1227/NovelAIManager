@@ -68,15 +68,27 @@ class PNGMetaData {
     if (chunkDataMap.containsKey("tEXtDescription")) {
       description = latin1.decode(chunkDataMap["tEXtDescription"]!);
     }
+    //説明 (NovelAIのプロンプト)のマルチバイト文字版
+    if (chunkDataMap.containsKey("iTXtDescription")) {
+      description = utf8.decode(chunkDataMap["iTXtDescription"]!.toList());
+    }
 
     //コメント (NovelAIのパラメーター)
     if (chunkDataMap.containsKey("tEXtComment")) {
       comment = latin1.decode(chunkDataMap["tEXtComment"]!);
     }
+    //コメント (NovelAIのパラメーター)のマルチバイト文字版
+    if (chunkDataMap.containsKey("iTXtComment")) {
+      comment = utf8.decode(chunkDataMap["iTXtComment"]!.toList());
+    }
 
     //パラメーター (Stable Diffusion web UIのパラメーター)
     if (chunkDataMap.containsKey("tEXtparameters")) {
       parameters = latin1.decode(chunkDataMap["tEXtparameters"]!);
+    }
+    //パラメーター (Stable Diffusion web UIのパラメーター)のマルチバイト文字版
+    if (chunkDataMap.containsKey("iTXtparameters")) {
+      parameters = utf8.decode(chunkDataMap["iTXtparameters"]!);
     }
 
     //ソース (NovelAIのパラメーター)
@@ -159,6 +171,20 @@ class PNGMetaData {
         chunkName +=
             String.fromCharCodes(chunkData.sublist(0, chunkData.indexOf(0x00)));
         result[chunkName] = chunkData.sublist(chunkData.indexOf(0x00) + 1);
+      }
+
+      /// iTXtはマルチバイト文字が含まれている場合に使用される
+      /// tEXtと違いキーワードと内容の間にいくつかのフラグが含まれている
+      /// 現状 Novel AI / Stable Diffusion web UI共に特にこのフラグは使用されていなさそうなので
+      /// フラグのバイト分(+4)進めて内容を取得する
+      else if (chunkName == "iTXt") {
+        /// キーワードとデータの間には"0x00"が入っているのでそこでそこで分割することで
+        /// 別々にすることが出来る
+        chunkName +=
+            String.fromCharCodes(chunkData.sublist(0, chunkData.indexOf(0x00)));
+
+        /// フラグ分4進める
+        result[chunkName] = chunkData.sublist(chunkData.indexOf(0x00) + 1 + 4);
       } else {
         //tEXt以外のデータはそのまま突っ込む
         result[chunkName] = chunkData;
