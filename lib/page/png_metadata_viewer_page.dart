@@ -206,25 +206,16 @@ class _PNGMetaDataViewerPageState extends State<PNGMetaDataViewerPage> {
     if (pngMetaData == null) {
       return Column();
     }
-    if (pngMetaData!.metaDataType == MetaDataType.OTHER) {
-      return Column();
-    }
-
     var rawText = "";
-    //NovelAI
-    if (pngMetaData!.metaDataType == MetaDataType.NOVELAI) {
-      rawText = """title: ${pngMetaData!.title}
 
-description: ${pngMetaData!.description}
-
-comment: ${pngMetaData!.comment}
-
-source: ${pngMetaData!.source}""";
-    }
-    //Stable Diffusion web UI
-    else if (pngMetaData!.metaDataType == MetaDataType.STABLE_DIFFUSION_WEBUI) {
-      rawText = pngMetaData!.parameters;
-    }
+    pngMetaData!.chunkData.forEach((key, value) {
+      if (key.contains("tEXt")) {
+        rawText += "$key: ${latin1.decode(value)}\n";
+      }
+      if (key.contains("iTXt")) {
+        rawText += "$key: ${utf8.decode(value.toList())}\n";
+      }
+    });
 
     return Padding(
       padding: const EdgeInsets.all(8),

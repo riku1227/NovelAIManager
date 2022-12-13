@@ -41,6 +41,9 @@ class PNGMetaData {
   ///   | - プロンプトやステップ数、シード値、ネガティブプロンプトなどのデータが独自形式で入っている
   String parameters = "";
 
+  /// チャンクデータのマップ
+  Map<String, Uint8List> chunkData = {};
+
   /// コンストラクタ
   PNGMetaData({required Uint8List data}) {
     isPNG = _isPNG(data);
@@ -49,56 +52,56 @@ class PNGMetaData {
     }
 
     //PNGのチャンクデータをパースする
-    final chunkDataMap = _parseChunkData(data);
+    chunkData = _parseChunkData(data);
 
     //解像度
-    if (chunkDataMap.containsKey("IHDR")) {
+    if (chunkData.containsKey("IHDR")) {
       width = HexUtil.convertToDecimalNumber(
-          Uint8List.fromList(chunkDataMap["IHDR"]!.getRange(0, 4).toList()));
+          Uint8List.fromList(chunkData["IHDR"]!.getRange(0, 4).toList()));
       height = HexUtil.convertToDecimalNumber(
-          Uint8List.fromList(chunkDataMap["IHDR"]!.getRange(4, 8).toList()));
+          Uint8List.fromList(chunkData["IHDR"]!.getRange(4, 8).toList()));
     }
 
     //タイトル
-    if (chunkDataMap.containsKey("tEXtTitle")) {
-      title = latin1.decode(chunkDataMap["tEXtTitle"]!);
+    if (chunkData.containsKey("tEXtTitle")) {
+      title = latin1.decode(chunkData["tEXtTitle"]!);
     }
 
     //説明 (NovelAIのプロンプト)
-    if (chunkDataMap.containsKey("tEXtDescription")) {
-      description = latin1.decode(chunkDataMap["tEXtDescription"]!);
+    if (chunkData.containsKey("tEXtDescription")) {
+      description = latin1.decode(chunkData["tEXtDescription"]!);
     }
     //説明 (NovelAIのプロンプト)のマルチバイト文字版
-    if (chunkDataMap.containsKey("iTXtDescription")) {
-      description = utf8.decode(chunkDataMap["iTXtDescription"]!.toList());
+    if (chunkData.containsKey("iTXtDescription")) {
+      description = utf8.decode(chunkData["iTXtDescription"]!.toList());
     }
 
     //コメント (NovelAIのパラメーター)
-    if (chunkDataMap.containsKey("tEXtComment")) {
-      comment = latin1.decode(chunkDataMap["tEXtComment"]!);
+    if (chunkData.containsKey("tEXtComment")) {
+      comment = latin1.decode(chunkData["tEXtComment"]!);
     }
     //コメント (NovelAIのパラメーター)のマルチバイト文字版
-    if (chunkDataMap.containsKey("iTXtComment")) {
-      comment = utf8.decode(chunkDataMap["iTXtComment"]!.toList());
+    if (chunkData.containsKey("iTXtComment")) {
+      comment = utf8.decode(chunkData["iTXtComment"]!.toList());
     }
 
     //パラメーター (Stable Diffusion web UIのパラメーター)
-    if (chunkDataMap.containsKey("tEXtparameters")) {
-      parameters = latin1.decode(chunkDataMap["tEXtparameters"]!);
+    if (chunkData.containsKey("tEXtparameters")) {
+      parameters = latin1.decode(chunkData["tEXtparameters"]!);
     }
     //パラメーター (Stable Diffusion web UIのパラメーター)のマルチバイト文字版
-    if (chunkDataMap.containsKey("iTXtparameters")) {
-      parameters = utf8.decode(chunkDataMap["iTXtparameters"]!);
+    if (chunkData.containsKey("iTXtparameters")) {
+      parameters = utf8.decode(chunkData["iTXtparameters"]!);
     }
 
     //ソース (NovelAIのパラメーター)
-    if (chunkDataMap.containsKey("tEXtSource")) {
-      source = latin1.decode(chunkDataMap["tEXtSource"]!);
+    if (chunkData.containsKey("tEXtSource")) {
+      source = latin1.decode(chunkData["tEXtSource"]!);
     }
 
     //メタデータの種類を判別
-    if (chunkDataMap.containsKey("tEXtSoftware")) {
-      if (latin1.decode(chunkDataMap["tEXtSoftware"]!) == "NovelAI") {
+    if (chunkData.containsKey("tEXtSoftware")) {
+      if (latin1.decode(chunkData["tEXtSoftware"]!) == "NovelAI") {
         metaDataType = MetaDataType.NOVELAI;
       }
     } else if (parameters.isNotEmpty) {
