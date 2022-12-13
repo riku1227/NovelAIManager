@@ -61,50 +61,32 @@ class PNGMetaData {
 
     //タイトル
     if (chunkDataMap.containsKey("tEXtTitle")) {
-      title = utf8.decode(chunkDataMap["tEXtTitle"]!.toList());
+      title = latin1.decode(chunkDataMap["tEXtTitle"]!);
     }
 
     //説明 (NovelAIのプロンプト)
     if (chunkDataMap.containsKey("tEXtDescription")) {
-      description = utf8.decode(chunkDataMap["tEXtDescription"]!.toList());
+      description = latin1.decode(chunkDataMap["tEXtDescription"]!);
     }
 
     //コメント (NovelAIのパラメーター)
     if (chunkDataMap.containsKey("tEXtComment")) {
-      comment = utf8
-          .decode(
-            chunkDataMap["tEXtComment"]!.toList(),
-            allowMalformed: true,
-          )
-          //不正な文字(NBSP[0xA0]など)として判定された文字を半角スペースに入れ替える
-          .replaceAll("\uFFFD", " ");
+      comment = latin1.decode(chunkDataMap["tEXtComment"]!);
     }
 
     //パラメーター (Stable Diffusion web UIのパラメーター)
     if (chunkDataMap.containsKey("tEXtparameters")) {
-      parameters = utf8
-          .decode(
-            chunkDataMap["tEXtparameters"]!.toList(),
-            allowMalformed: true,
-          )
-          //不正な文字(NBSP[0xA0]など)として判定された文字を半角スペースに入れ替える
-          .replaceAll("\uFFFD", " ");
+      parameters = latin1.decode(chunkDataMap["tEXtparameters"]!);
     }
 
     //ソース (NovelAIのパラメーター)
     if (chunkDataMap.containsKey("tEXtSource")) {
-      source = utf8
-          .decode(
-            chunkDataMap["tEXtSource"]!.toList(),
-            allowMalformed: true,
-          )
-          //不正な文字(NBSP[0xA0]など)として判定された文字を半角スペースに入れ替える
-          .replaceAll("\uFFFD", " ");
+      source = latin1.decode(chunkDataMap["tEXtSource"]!);
     }
 
     //メタデータの種類を判別
     if (chunkDataMap.containsKey("tEXtSoftware")) {
-      if (utf8.decode(chunkDataMap["tEXtSoftware"]!.toList()) == "NovelAI") {
+      if (latin1.decode(chunkDataMap["tEXtSoftware"]!) == "NovelAI") {
         metaDataType = MetaDataType.NOVELAI;
       }
     } else if (parameters.isNotEmpty) {
