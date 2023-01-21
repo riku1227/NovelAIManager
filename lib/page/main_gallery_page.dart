@@ -8,6 +8,7 @@ import 'package:novelai_manager/novelai_manager.dart';
 import 'package:novelai_manager/page/gallery_edit_page.dart';
 import 'package:novelai_manager/page/png_metadata_viewer_page.dart';
 import 'package:novelai_manager/page/prompt_info_page.dart';
+import 'package:novelai_manager/page/settings_page.dart';
 import 'package:novelai_manager/repository/gallery_data_repository.dart';
 import 'package:novelai_manager/util/db_util.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -139,6 +140,13 @@ class _MainGalleryPageState extends State<MainGalleryPage> {
               title: const Text("PNGのメタデータを見る"),
               onTap: () {
                 Navigator.push(context, PNGMetaDataViewerPage.getRoute());
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text("設定"),
+              onTap: () {
+                Navigator.push(context, SettingsPage.getRoute());
               },
             ),
           ],
