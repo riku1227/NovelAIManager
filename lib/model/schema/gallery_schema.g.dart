@@ -6,7 +6,8 @@ part of 'gallery_schema.dart';
 // RealmObjectGenerator
 // **************************************************************************
 
-class GalleryData extends _GalleryData with RealmEntity, RealmObject {
+class GalleryData extends _GalleryData
+    with RealmEntity, RealmObjectBase, RealmObject {
   static var _defaultsSet = false;
 
   GalleryData(
@@ -19,74 +20,77 @@ class GalleryData extends _GalleryData with RealmEntity, RealmObject {
     FolderData? folderData,
   }) {
     if (!_defaultsSet) {
-      _defaultsSet = RealmObject.setDefaults<GalleryData>({
+      _defaultsSet = RealmObjectBase.setDefaults<GalleryData>({
         'isFolder': false,
       });
     }
-    RealmObject.set(this, 'id', id);
-    RealmObject.set(this, 'title', title);
-    RealmObject.set(this, 'createdAt', createdAt);
-    RealmObject.set(this, 'updatedAt', updatedAt);
-    RealmObject.set(this, 'isFolder', isFolder);
-    RealmObject.set(this, 'promptData', promptData);
-    RealmObject.set(this, 'folderData', folderData);
+    RealmObjectBase.set(this, 'id', id);
+    RealmObjectBase.set(this, 'title', title);
+    RealmObjectBase.set(this, 'createdAt', createdAt);
+    RealmObjectBase.set(this, 'updatedAt', updatedAt);
+    RealmObjectBase.set(this, 'isFolder', isFolder);
+    RealmObjectBase.set(this, 'promptData', promptData);
+    RealmObjectBase.set(this, 'folderData', folderData);
   }
 
   GalleryData._();
 
   @override
-  Uuid get id => RealmObject.get<Uuid>(this, 'id') as Uuid;
+  Uuid get id => RealmObjectBase.get<Uuid>(this, 'id') as Uuid;
   @override
-  set id(Uuid value) => RealmObject.set(this, 'id', value);
+  set id(Uuid value) => RealmObjectBase.set(this, 'id', value);
 
   @override
-  String get title => RealmObject.get<String>(this, 'title') as String;
+  String get title => RealmObjectBase.get<String>(this, 'title') as String;
   @override
-  set title(String value) => RealmObject.set(this, 'title', value);
+  set title(String value) => RealmObjectBase.set(this, 'title', value);
 
   @override
   DateTime get createdAt =>
-      RealmObject.get<DateTime>(this, 'createdAt') as DateTime;
+      RealmObjectBase.get<DateTime>(this, 'createdAt') as DateTime;
   @override
-  set createdAt(DateTime value) => RealmObject.set(this, 'createdAt', value);
+  set createdAt(DateTime value) =>
+      RealmObjectBase.set(this, 'createdAt', value);
 
   @override
   DateTime get updatedAt =>
-      RealmObject.get<DateTime>(this, 'updatedAt') as DateTime;
+      RealmObjectBase.get<DateTime>(this, 'updatedAt') as DateTime;
   @override
-  set updatedAt(DateTime value) => RealmObject.set(this, 'updatedAt', value);
+  set updatedAt(DateTime value) =>
+      RealmObjectBase.set(this, 'updatedAt', value);
 
   @override
-  bool get isFolder => RealmObject.get<bool>(this, 'isFolder') as bool;
+  bool get isFolder => RealmObjectBase.get<bool>(this, 'isFolder') as bool;
   @override
-  set isFolder(bool value) => RealmObject.set(this, 'isFolder', value);
+  set isFolder(bool value) => RealmObjectBase.set(this, 'isFolder', value);
 
   @override
   PromptData? get promptData =>
-      RealmObject.get<PromptData>(this, 'promptData') as PromptData?;
+      RealmObjectBase.get<PromptData>(this, 'promptData') as PromptData?;
   @override
   set promptData(covariant PromptData? value) =>
-      RealmObject.set(this, 'promptData', value);
+      RealmObjectBase.set(this, 'promptData', value);
 
   @override
   FolderData? get folderData =>
-      RealmObject.get<FolderData>(this, 'folderData') as FolderData?;
+      RealmObjectBase.get<FolderData>(this, 'folderData') as FolderData?;
   @override
   set folderData(covariant FolderData? value) =>
-      RealmObject.set(this, 'folderData', value);
+      RealmObjectBase.set(this, 'folderData', value);
 
   @override
   Stream<RealmObjectChanges<GalleryData>> get changes =>
-      RealmObject.getChanges<GalleryData>(this);
+      RealmObjectBase.getChanges<GalleryData>(this);
 
   @override
-  GalleryData freeze() => RealmObject.freezeObject<GalleryData>(this);
+  GalleryData freeze() => RealmObjectBase.freezeObject<GalleryData>(this);
 
   static SchemaObject get schema => _schema ??= _initSchema();
   static SchemaObject? _schema;
   static SchemaObject _initSchema() {
-    RealmObject.registerFactory(GalleryData._);
-    return const SchemaObject(GalleryData, 'GalleryData', [
+    RealmObjectBase.registerFactory(GalleryData._);
+    return const SchemaObject(
+        ObjectType.realmObject, GalleryData, 'GalleryData', [
       SchemaProperty('id', RealmPropertyType.uuid, primaryKey: true),
       SchemaProperty('title', RealmPropertyType.string),
       SchemaProperty('createdAt', RealmPropertyType.timestamp),
@@ -100,7 +104,8 @@ class GalleryData extends _GalleryData with RealmEntity, RealmObject {
   }
 }
 
-class FolderData extends _FolderData with RealmEntity, RealmObject {
+class FolderData extends _FolderData
+    with RealmEntity, RealmObjectBase, RealmObject {
   static var _defaultsSet = false;
 
   FolderData(
@@ -109,46 +114,48 @@ class FolderData extends _FolderData with RealmEntity, RealmObject {
     String description = "",
   }) {
     if (!_defaultsSet) {
-      _defaultsSet = RealmObject.setDefaults<FolderData>({
+      _defaultsSet = RealmObjectBase.setDefaults<FolderData>({
         'name': "",
         'description': "",
       });
     }
-    RealmObject.set(this, 'id', id);
-    RealmObject.set(this, 'name', name);
-    RealmObject.set(this, 'description', description);
+    RealmObjectBase.set(this, 'id', id);
+    RealmObjectBase.set(this, 'name', name);
+    RealmObjectBase.set(this, 'description', description);
   }
 
   FolderData._();
 
   @override
-  Uuid get id => RealmObject.get<Uuid>(this, 'id') as Uuid;
+  Uuid get id => RealmObjectBase.get<Uuid>(this, 'id') as Uuid;
   @override
-  set id(Uuid value) => RealmObject.set(this, 'id', value);
+  set id(Uuid value) => RealmObjectBase.set(this, 'id', value);
 
   @override
-  String get name => RealmObject.get<String>(this, 'name') as String;
+  String get name => RealmObjectBase.get<String>(this, 'name') as String;
   @override
-  set name(String value) => RealmObject.set(this, 'name', value);
+  set name(String value) => RealmObjectBase.set(this, 'name', value);
 
   @override
   String get description =>
-      RealmObject.get<String>(this, 'description') as String;
+      RealmObjectBase.get<String>(this, 'description') as String;
   @override
-  set description(String value) => RealmObject.set(this, 'description', value);
+  set description(String value) =>
+      RealmObjectBase.set(this, 'description', value);
 
   @override
   Stream<RealmObjectChanges<FolderData>> get changes =>
-      RealmObject.getChanges<FolderData>(this);
+      RealmObjectBase.getChanges<FolderData>(this);
 
   @override
-  FolderData freeze() => RealmObject.freezeObject<FolderData>(this);
+  FolderData freeze() => RealmObjectBase.freezeObject<FolderData>(this);
 
   static SchemaObject get schema => _schema ??= _initSchema();
   static SchemaObject? _schema;
   static SchemaObject _initSchema() {
-    RealmObject.registerFactory(FolderData._);
-    return const SchemaObject(FolderData, 'FolderData', [
+    RealmObjectBase.registerFactory(FolderData._);
+    return const SchemaObject(
+        ObjectType.realmObject, FolderData, 'FolderData', [
       SchemaProperty('id', RealmPropertyType.uuid, primaryKey: true),
       SchemaProperty('name', RealmPropertyType.string),
       SchemaProperty('description', RealmPropertyType.string),
@@ -156,7 +163,8 @@ class FolderData extends _FolderData with RealmEntity, RealmObject {
   }
 }
 
-class PromptData extends _PromptData with RealmEntity, RealmObject {
+class PromptData extends _PromptData
+    with RealmEntity, RealmObjectBase, RealmObject {
   static var _defaultsSet = false;
 
   PromptData(
@@ -178,7 +186,7 @@ class PromptData extends _PromptData with RealmEntity, RealmObject {
     Iterable<String> undesiredPrompt = const [],
   }) {
     if (!_defaultsSet) {
-      _defaultsSet = RealmObject.setDefaults<PromptData>({
+      _defaultsSet = RealmObjectBase.setDefaults<PromptData>({
         'description': "",
         'baseModel': "nai_diffusion_anime_full",
         'width': 512,
@@ -192,43 +200,44 @@ class PromptData extends _PromptData with RealmEntity, RealmObject {
         'sampling': "k_euler_ancestral",
       });
     }
-    RealmObject.set(this, 'id', id);
-    RealmObject.set(this, 'description', description);
-    RealmObject.set(this, 'baseModel', baseModel);
-    RealmObject.set(this, 'width', width);
-    RealmObject.set(this, 'height', height);
-    RealmObject.set(this, 'strength', strength);
-    RealmObject.set(this, 'noise', noise);
-    RealmObject.set(this, 'undesiredContent', undesiredContent);
-    RealmObject.set(this, 'addQualityTag', addQualityTag);
-    RealmObject.set(this, 'steps', steps);
-    RealmObject.set(this, 'scale', scale);
-    RealmObject.set(this, 'seed', seed);
-    RealmObject.set(this, 'sampling', sampling);
-    RealmObject.set<RealmList<ImageData>>(
+    RealmObjectBase.set(this, 'id', id);
+    RealmObjectBase.set(this, 'description', description);
+    RealmObjectBase.set(this, 'baseModel', baseModel);
+    RealmObjectBase.set(this, 'width', width);
+    RealmObjectBase.set(this, 'height', height);
+    RealmObjectBase.set(this, 'strength', strength);
+    RealmObjectBase.set(this, 'noise', noise);
+    RealmObjectBase.set(this, 'undesiredContent', undesiredContent);
+    RealmObjectBase.set(this, 'addQualityTag', addQualityTag);
+    RealmObjectBase.set(this, 'steps', steps);
+    RealmObjectBase.set(this, 'scale', scale);
+    RealmObjectBase.set(this, 'seed', seed);
+    RealmObjectBase.set(this, 'sampling', sampling);
+    RealmObjectBase.set<RealmList<ImageData>>(
         this, 'generatedImageList', RealmList<ImageData>(generatedImageList));
-    RealmObject.set<RealmList<String>>(
+    RealmObjectBase.set<RealmList<String>>(
         this, 'prompt', RealmList<String>(prompt));
-    RealmObject.set<RealmList<String>>(
+    RealmObjectBase.set<RealmList<String>>(
         this, 'undesiredPrompt', RealmList<String>(undesiredPrompt));
   }
 
   PromptData._();
 
   @override
-  Uuid get id => RealmObject.get<Uuid>(this, 'id') as Uuid;
+  Uuid get id => RealmObjectBase.get<Uuid>(this, 'id') as Uuid;
   @override
-  set id(Uuid value) => RealmObject.set(this, 'id', value);
+  set id(Uuid value) => RealmObjectBase.set(this, 'id', value);
 
   @override
   String get description =>
-      RealmObject.get<String>(this, 'description') as String;
+      RealmObjectBase.get<String>(this, 'description') as String;
   @override
-  set description(String value) => RealmObject.set(this, 'description', value);
+  set description(String value) =>
+      RealmObjectBase.set(this, 'description', value);
 
   @override
   RealmList<ImageData> get generatedImageList =>
-      RealmObject.get<ImageData>(this, 'generatedImageList')
+      RealmObjectBase.get<ImageData>(this, 'generatedImageList')
           as RealmList<ImageData>;
   @override
   set generatedImageList(covariant RealmList<ImageData> value) =>
@@ -236,89 +245,93 @@ class PromptData extends _PromptData with RealmEntity, RealmObject {
 
   @override
   RealmList<String> get prompt =>
-      RealmObject.get<String>(this, 'prompt') as RealmList<String>;
+      RealmObjectBase.get<String>(this, 'prompt') as RealmList<String>;
   @override
   set prompt(covariant RealmList<String> value) =>
       throw RealmUnsupportedSetError();
 
   @override
-  String get baseModel => RealmObject.get<String>(this, 'baseModel') as String;
+  String get baseModel =>
+      RealmObjectBase.get<String>(this, 'baseModel') as String;
   @override
-  set baseModel(String value) => RealmObject.set(this, 'baseModel', value);
+  set baseModel(String value) => RealmObjectBase.set(this, 'baseModel', value);
 
   @override
-  int get width => RealmObject.get<int>(this, 'width') as int;
+  int get width => RealmObjectBase.get<int>(this, 'width') as int;
   @override
-  set width(int value) => RealmObject.set(this, 'width', value);
+  set width(int value) => RealmObjectBase.set(this, 'width', value);
 
   @override
-  int get height => RealmObject.get<int>(this, 'height') as int;
+  int get height => RealmObjectBase.get<int>(this, 'height') as int;
   @override
-  set height(int value) => RealmObject.set(this, 'height', value);
+  set height(int value) => RealmObjectBase.set(this, 'height', value);
 
   @override
-  double get strength => RealmObject.get<double>(this, 'strength') as double;
+  double get strength =>
+      RealmObjectBase.get<double>(this, 'strength') as double;
   @override
-  set strength(double value) => RealmObject.set(this, 'strength', value);
+  set strength(double value) => RealmObjectBase.set(this, 'strength', value);
 
   @override
-  double get noise => RealmObject.get<double>(this, 'noise') as double;
+  double get noise => RealmObjectBase.get<double>(this, 'noise') as double;
   @override
-  set noise(double value) => RealmObject.set(this, 'noise', value);
+  set noise(double value) => RealmObjectBase.set(this, 'noise', value);
 
   @override
   RealmList<String> get undesiredPrompt =>
-      RealmObject.get<String>(this, 'undesiredPrompt') as RealmList<String>;
+      RealmObjectBase.get<String>(this, 'undesiredPrompt') as RealmList<String>;
   @override
   set undesiredPrompt(covariant RealmList<String> value) =>
       throw RealmUnsupportedSetError();
 
   @override
   String get undesiredContent =>
-      RealmObject.get<String>(this, 'undesiredContent') as String;
+      RealmObjectBase.get<String>(this, 'undesiredContent') as String;
   @override
   set undesiredContent(String value) =>
-      RealmObject.set(this, 'undesiredContent', value);
+      RealmObjectBase.set(this, 'undesiredContent', value);
 
   @override
   bool get addQualityTag =>
-      RealmObject.get<bool>(this, 'addQualityTag') as bool;
+      RealmObjectBase.get<bool>(this, 'addQualityTag') as bool;
   @override
   set addQualityTag(bool value) =>
-      RealmObject.set(this, 'addQualityTag', value);
+      RealmObjectBase.set(this, 'addQualityTag', value);
 
   @override
-  int get steps => RealmObject.get<int>(this, 'steps') as int;
+  int get steps => RealmObjectBase.get<int>(this, 'steps') as int;
   @override
-  set steps(int value) => RealmObject.set(this, 'steps', value);
+  set steps(int value) => RealmObjectBase.set(this, 'steps', value);
 
   @override
-  int get scale => RealmObject.get<int>(this, 'scale') as int;
+  int get scale => RealmObjectBase.get<int>(this, 'scale') as int;
   @override
-  set scale(int value) => RealmObject.set(this, 'scale', value);
+  set scale(int value) => RealmObjectBase.set(this, 'scale', value);
 
   @override
-  double? get seed => RealmObject.get<double>(this, 'seed') as double?;
+  double? get seed => RealmObjectBase.get<double>(this, 'seed') as double?;
   @override
-  set seed(double? value) => RealmObject.set(this, 'seed', value);
+  set seed(double? value) => RealmObjectBase.set(this, 'seed', value);
 
   @override
-  String get sampling => RealmObject.get<String>(this, 'sampling') as String;
+  String get sampling =>
+      RealmObjectBase.get<String>(this, 'sampling') as String;
   @override
-  set sampling(String value) => RealmObject.set(this, 'sampling', value);
+  set sampling(String value) => RealmObjectBase.set(this, 'sampling', value);
 
   @override
   Stream<RealmObjectChanges<PromptData>> get changes =>
-      RealmObject.getChanges<PromptData>(this);
+      RealmObjectBase.getChanges<PromptData>(this);
 
   @override
-  PromptData freeze() => RealmObject.freezeObject<PromptData>(this);
+  PromptData freeze() => RealmObjectBase.freezeObject<PromptData>(this);
 
   static SchemaObject get schema => _schema ??= _initSchema();
   static SchemaObject? _schema;
   static SchemaObject _initSchema() {
-    RealmObject.registerFactory(PromptData._);
-    return const SchemaObject(PromptData, 'PromptData', [
+    RealmObjectBase.registerFactory(PromptData._);
+    return const SchemaObject(
+        ObjectType.realmObject, PromptData, 'PromptData', [
       SchemaProperty('id', RealmPropertyType.uuid, primaryKey: true),
       SchemaProperty('description', RealmPropertyType.string),
       SchemaProperty('generatedImageList', RealmPropertyType.object,
@@ -342,7 +355,8 @@ class PromptData extends _PromptData with RealmEntity, RealmObject {
   }
 }
 
-class ImageData extends _ImageData with RealmEntity, RealmObject {
+class ImageData extends _ImageData
+    with RealmEntity, RealmObjectBase, RealmObject {
   static var _defaultsSet = false;
 
   ImageData(
@@ -352,51 +366,54 @@ class ImageData extends _ImageData with RealmEntity, RealmObject {
     double? imgSeed,
   }) {
     if (!_defaultsSet) {
-      _defaultsSet = RealmObject.setDefaults<ImageData>({
+      _defaultsSet = RealmObjectBase.setDefaults<ImageData>({
         'description': "",
       });
     }
-    RealmObject.set(this, 'id', id);
-    RealmObject.set(this, 'description', description);
-    RealmObject.set(this, 'imagePath', imagePath);
-    RealmObject.set(this, 'imgSeed', imgSeed);
+    RealmObjectBase.set(this, 'id', id);
+    RealmObjectBase.set(this, 'description', description);
+    RealmObjectBase.set(this, 'imagePath', imagePath);
+    RealmObjectBase.set(this, 'imgSeed', imgSeed);
   }
 
   ImageData._();
 
   @override
-  Uuid get id => RealmObject.get<Uuid>(this, 'id') as Uuid;
+  Uuid get id => RealmObjectBase.get<Uuid>(this, 'id') as Uuid;
   @override
-  set id(Uuid value) => RealmObject.set(this, 'id', value);
+  set id(Uuid value) => RealmObjectBase.set(this, 'id', value);
 
   @override
   String get description =>
-      RealmObject.get<String>(this, 'description') as String;
+      RealmObjectBase.get<String>(this, 'description') as String;
   @override
-  set description(String value) => RealmObject.set(this, 'description', value);
+  set description(String value) =>
+      RealmObjectBase.set(this, 'description', value);
 
   @override
-  String get imagePath => RealmObject.get<String>(this, 'imagePath') as String;
+  String get imagePath =>
+      RealmObjectBase.get<String>(this, 'imagePath') as String;
   @override
-  set imagePath(String value) => RealmObject.set(this, 'imagePath', value);
+  set imagePath(String value) => RealmObjectBase.set(this, 'imagePath', value);
 
   @override
-  double? get imgSeed => RealmObject.get<double>(this, 'imgSeed') as double?;
+  double? get imgSeed =>
+      RealmObjectBase.get<double>(this, 'imgSeed') as double?;
   @override
-  set imgSeed(double? value) => RealmObject.set(this, 'imgSeed', value);
+  set imgSeed(double? value) => RealmObjectBase.set(this, 'imgSeed', value);
 
   @override
   Stream<RealmObjectChanges<ImageData>> get changes =>
-      RealmObject.getChanges<ImageData>(this);
+      RealmObjectBase.getChanges<ImageData>(this);
 
   @override
-  ImageData freeze() => RealmObject.freezeObject<ImageData>(this);
+  ImageData freeze() => RealmObjectBase.freezeObject<ImageData>(this);
 
   static SchemaObject get schema => _schema ??= _initSchema();
   static SchemaObject? _schema;
   static SchemaObject _initSchema() {
-    RealmObject.registerFactory(ImageData._);
-    return const SchemaObject(ImageData, 'ImageData', [
+    RealmObjectBase.registerFactory(ImageData._);
+    return const SchemaObject(ObjectType.realmObject, ImageData, 'ImageData', [
       SchemaProperty('id', RealmPropertyType.uuid, primaryKey: true),
       SchemaProperty('description', RealmPropertyType.string),
       SchemaProperty('imagePath', RealmPropertyType.string),

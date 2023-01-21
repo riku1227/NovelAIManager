@@ -12,16 +12,16 @@ dependencies:
   flutter:
     sdk: flutter
 
-  carousel_slider: ^4.1.1
-  file_picker: ^5.2.1
-  realm: ^0.5.0+beta
+  carousel_slider: ^4.2.1
+  file_picker: ^5.2.5
+  realm: ^0.9.0+rc
   path: ^1.8.2
-  desktop_drop: ^0.3.3
+  desktop_drop: ^0.4.0
   http: ^0.13.5
-  url_launcher: ^6.1.6
+  url_launcher: ^6.1.7
   path_provider: ^2.0.11
   freezed_annotation: ^2.2.0
-  json_annotation: ^4.7.0
+  json_annotation: ^4.8.0
 
 dev_dependencies:
   flutter_test:
