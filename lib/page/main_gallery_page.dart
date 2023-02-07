@@ -13,10 +13,9 @@ import 'package:novelai_manager/repository/gallery_data_repository.dart';
 import 'package:novelai_manager/util/db_util.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:http/http.dart' as http;
 
 import '../components/widget/my_scroll_view.dart';
-import '../model/json/nai_parameter.dart';
-import '../prompt/image_metadata/png_metadata.dart';
 
 /// 起動時に最初に表示されるページ
 /// プロンプトデータ一覧のギャラリーが表示される
@@ -32,6 +31,36 @@ class MainGalleryPage extends StatefulWidget {
 class _MainGalleryPageState extends State<MainGalleryPage> {
   //ギャラリーのデータ一覧が入るリスト
   List<GalleryData> galleryDataList = List.empty();
+
+  /// ソフトの更新があるかどうかを確認する
+  /// 更新があった場合はスナックバーを出す
+  Future<void> checkUpdate(BuildContext context) async {
+    //BuildContextを非同期処理した後に使うと怒られるので、先に使う
+    var messenger = ScaffoldMessenger.of(context);
+
+    //アップデートの情報を取得するURL
+    var updateCheckUrl = Uri.parse(
+        "https://raw.githubusercontent.com/riku1227/NovelAIManager/files/version.json");
+    var respone = await http.get(updateCheckUrl);
+    if (respone.statusCode == 200) {
+      Map<String, dynamic> json = jsonDecode(respone.body);
+      if (json.containsKey("version_code")) {
+        if (NovelAIManager.versionCode < json["version_code"]) {
+          var snackBar = SnackBar(
+            content: Text('アップデートがあります: ${json["version"]}'),
+            duration: const Duration(seconds: 5),
+            action: SnackBarAction(
+              label: "ダウンロードページを開く",
+              onPressed: () {
+                launchUrlString(json["download_url"]);
+              },
+            ),
+          );
+          messenger.showSnackBar(snackBar);
+        }
+      }
+    }
+  }
 
   //データベースからギャラリーデータを読み込む
   Future<bool> loadGalleryDatabase() async {
@@ -79,6 +108,7 @@ class _MainGalleryPageState extends State<MainGalleryPage> {
 
   @override
   Widget build(BuildContext context) {
+    checkUpdate(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text("NovelAI Manager"),
