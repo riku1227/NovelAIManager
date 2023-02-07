@@ -10,6 +10,7 @@ import 'package:novelai_manager/page/png_metadata_viewer_page.dart';
 import 'package:novelai_manager/page/prompt_info_page.dart';
 import 'package:novelai_manager/page/settings_page.dart';
 import 'package:novelai_manager/repository/gallery_data_repository.dart';
+import 'package:novelai_manager/repository/settings_repository.dart';
 import 'package:novelai_manager/util/db_util.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -37,6 +38,14 @@ class _MainGalleryPageState extends State<MainGalleryPage> {
   Future<void> checkUpdate(BuildContext context) async {
     //BuildContextを非同期処理した後に使うと怒られるので、先に使う
     var messenger = ScaffoldMessenger.of(context);
+
+    //現在の設定を取得
+    var settings = await SettingsRepository.getSetting();
+    //自動更新確認がオフの場合は更新の確認をせずに処理を終了する
+    if (!settings.isAutoCheckForUpdates) {
+      print("aaaa");
+      return;
+    }
 
     //アップデートの情報を取得するURL
     var updateCheckUrl = Uri.parse(

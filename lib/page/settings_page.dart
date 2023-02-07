@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:novelai_manager/repository/settings_repository.dart';
 
 import '../components/widget/my_scroll_view.dart';
 
@@ -19,8 +20,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  bool _isAutoCheckForUpdates = true;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,18 +27,29 @@ class _SettingsPageState extends State<SettingsPage> {
         title: const Text('設定'),
       ),
       body: MyScrollView(
-        child: Column(
-          children: <Widget>[
-            SwitchListTile(
-              title: const Text('テスト設定'),
-              value: _isAutoCheckForUpdates,
-              onChanged: (bool value) {
-                setState(() {
-                  _isAutoCheckForUpdates = value;
-                });
-              },
-            ),
-          ],
+        child: FutureBuilder(
+          future: SettingsRepository.getSetting(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Column(
+                children: <Widget>[
+                  SwitchListTile(
+                    title: const Text('自動的にソフトの更新を確認する'),
+                    secondary: const Icon(Icons.update),
+                    value: snapshot.data!.isAutoCheckForUpdates,
+                    onChanged: (bool value) async {
+                      setState(() {
+                        snapshot.data!.isAutoCheckForUpdates = value;
+                      });
+                      await SettingsRepository.writeSetting(snapshot.data!);
+                    },
+                  ),
+                ],
+              );
+            } else {
+              return const Text("読み込み中...");
+            }
+          },
         ),
       ),
     );
