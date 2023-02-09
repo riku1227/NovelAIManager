@@ -16,8 +16,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:http/http.dart' as http;
 
-import '../components/widget/my_scroll_view.dart';
-
 /// 起動時に最初に表示されるページ
 /// プロンプトデータ一覧のギャラリーが表示される
 class MainGalleryPage extends StatefulWidget {
@@ -198,7 +196,7 @@ class _MainGalleryPageState extends State<MainGalleryPage> {
         icon: const Icon(Icons.photo),
         label: const Text("ギャラリーを追加"),
       ),
-      body: MyScrollView(
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8),
           child: Center(

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:novelai_manager/repository/settings_repository.dart';
 
-import '../components/widget/my_scroll_view.dart';
-
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
@@ -26,7 +24,7 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: AppBar(
         title: const Text('設定'),
       ),
-      body: MyScrollView(
+      body: SingleChildScrollView(
         child: FutureBuilder(
           future: SettingsRepository.getSetting(),
           builder: (context, snapshot) {

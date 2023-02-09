@@ -5,7 +5,6 @@ import 'package:desktop_drop/desktop_drop.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:novelai_manager/components/widget/copy_text_field.dart';
-import 'package:novelai_manager/components/widget/my_scroll_view.dart';
 import 'package:novelai_manager/components/widget/outline_container.dart';
 import 'package:novelai_manager/prompt/image_metadata/generic_metadata.dart';
 import 'package:novelai_manager/prompt/image_metadata/metadata_type.dart';
@@ -595,7 +594,7 @@ class _PNGMetaDataViewerPageState extends State<PNGMetaDataViewerPage> {
 
     return Padding(
       padding: const EdgeInsets.all(8),
-      child: MyScrollView(
+      child: SingleChildScrollView(
         child: Column(
           children: [
             //汎用メタデータ
@@ -624,7 +623,7 @@ class _PNGMetaDataViewerPageState extends State<PNGMetaDataViewerPage> {
         children: [
           Expanded(
             flex: 5,
-            child: MyScrollView(
+            child: SingleChildScrollView(
               child: buildLeftArea(context),
             ),
           ),

@@ -12,8 +12,6 @@ import 'package:novelai_manager/repository/gallery_data_repository.dart';
 import 'package:novelai_manager/util/db_util.dart';
 import 'package:novelai_manager/util/general_util.dart';
 
-import '../components/widget/long_press_icon_button.dart';
-import '../components/widget/my_scroll_view.dart';
 import '../model/schema/gallery_schema.dart';
 
 /// プロンプトの情報を表示するページ
@@ -82,7 +80,7 @@ class _PromptInfoPageState extends State<PromptInfoPage> {
   /// 左側のUIを作成
   ///  | 登録されている画像のリスト
   Widget buildLeftAreaWidget(PromptData promptData) {
-    return MyScrollView(
+    return SingleChildScrollView(
       child: Column(
         children: [
           /// ****************************************
@@ -255,7 +253,7 @@ class _PromptInfoPageState extends State<PromptInfoPage> {
     imageWidthTextController.text = promptData.width.toString();
     imageHeightTextController.text = promptData.height.toString();
 
-    return MyScrollView(
+    return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.only(left: 8, right: 8),
         child: Column(
