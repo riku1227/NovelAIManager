@@ -41,7 +41,6 @@ class _MainGalleryPageState extends State<MainGalleryPage> {
     var settings = await SettingsRepository.getSetting();
     //自動更新確認がオフの場合は更新の確認をせずに処理を終了する
     if (!settings.isAutoCheckForUpdates) {
-      print("aaaa");
       return;
     }
 
