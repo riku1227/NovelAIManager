@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:novelai_manager/repository/settings_repository.dart';
 
+import '../novelai_manager.dart';
+
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
@@ -31,6 +33,9 @@ class _SettingsPageState extends State<SettingsPage> {
             if (snapshot.hasData) {
               return Column(
                 children: <Widget>[
+                  const ListTile(
+                    title: Text("基本設定"),
+                  ),
                   SwitchListTile(
                     title: const Text('自動的にソフトの更新を確認する'),
                     secondary: const Icon(Icons.update),
@@ -40,6 +45,25 @@ class _SettingsPageState extends State<SettingsPage> {
                         snapshot.data!.isAutoCheckForUpdates = value;
                       });
                       await SettingsRepository.writeSetting(snapshot.data!);
+                    },
+                  ),
+                  const ListTile(
+                    title: Text("その他"),
+                  ),
+                  ListTile(
+                    title: const Text("ソフトウェアの情報"),
+                    leading: const Icon(Icons.info),
+                    onTap: () {
+                      showAboutDialog(
+                          context: context,
+                          applicationVersion: NovelAIManager.version,
+                          applicationIcon: SizedBox(
+                            width: 64,
+                            height: 64,
+                            child: Image.asset("assets/images/icon.png"),
+                          ),
+                          applicationLegalese:
+                              "プロンプト変換機能(アルゴリズム)\nhttps://github.com/naisd5ch/novel-ai-5ch-wiki-js\n\nこのソフトのソースコード\nhttps://github.com/riku1227/NovelAIManager");
                     },
                   ),
                 ],

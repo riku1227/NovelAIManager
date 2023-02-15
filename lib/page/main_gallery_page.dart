@@ -136,21 +136,6 @@ class _MainGalleryPageState extends State<MainGalleryPage> {
             },
             icon: const Icon(Icons.folder),
           ),
-          IconButton(
-            onPressed: () {
-              showAboutDialog(
-                  context: context,
-                  applicationVersion: NovelAIManager.version,
-                  applicationIcon: SizedBox(
-                    width: 64,
-                    height: 64,
-                    child: Image.asset("assets/images/icon.png"),
-                  ),
-                  applicationLegalese:
-                      "プロンプト変換機能(アルゴリズム)\nhttps://github.com/naisd5ch/novel-ai-5ch-wiki-js\n\nこのソフトのソースコード\nhttps://github.com/riku1227/NovelAIManager");
-            },
-            icon: const Icon(Icons.info),
-          ),
         ],
       ),
       drawer: Drawer(
