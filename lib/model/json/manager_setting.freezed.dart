@@ -24,6 +24,10 @@ mixin _$ManagerSetting {
   bool get isAutoCheckForUpdates =>
       throw _privateConstructorUsedError; //アップデートを自動で確認するかどうか
   set isAutoCheckForUpdates(bool value) => throw _privateConstructorUsedError;
+  ImageSorterSetting get imageSorterSetting =>
+      throw _privateConstructorUsedError;
+  set imageSorterSetting(ImageSorterSetting value) =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -37,7 +41,10 @@ abstract class $ManagerSettingCopyWith<$Res> {
           ManagerSetting value, $Res Function(ManagerSetting) then) =
       _$ManagerSettingCopyWithImpl<$Res, ManagerSetting>;
   @useResult
-  $Res call({bool isAutoCheckForUpdates});
+  $Res call(
+      {bool isAutoCheckForUpdates, ImageSorterSetting imageSorterSetting});
+
+  $ImageSorterSettingCopyWith<$Res> get imageSorterSetting;
 }
 
 /// @nodoc
@@ -54,13 +61,27 @@ class _$ManagerSettingCopyWithImpl<$Res, $Val extends ManagerSetting>
   @override
   $Res call({
     Object? isAutoCheckForUpdates = null,
+    Object? imageSorterSetting = null,
   }) {
     return _then(_value.copyWith(
       isAutoCheckForUpdates: null == isAutoCheckForUpdates
           ? _value.isAutoCheckForUpdates
           : isAutoCheckForUpdates // ignore: cast_nullable_to_non_nullable
               as bool,
+      imageSorterSetting: null == imageSorterSetting
+          ? _value.imageSorterSetting
+          : imageSorterSetting // ignore: cast_nullable_to_non_nullable
+              as ImageSorterSetting,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ImageSorterSettingCopyWith<$Res> get imageSorterSetting {
+    return $ImageSorterSettingCopyWith<$Res>(_value.imageSorterSetting,
+        (value) {
+      return _then(_value.copyWith(imageSorterSetting: value) as $Val);
+    });
   }
 }
 
@@ -72,7 +93,11 @@ abstract class _$$_ManagerSettingCopyWith<$Res>
       __$$_ManagerSettingCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isAutoCheckForUpdates});
+  $Res call(
+      {bool isAutoCheckForUpdates, ImageSorterSetting imageSorterSetting});
+
+  @override
+  $ImageSorterSettingCopyWith<$Res> get imageSorterSetting;
 }
 
 /// @nodoc
@@ -87,12 +112,17 @@ class __$$_ManagerSettingCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isAutoCheckForUpdates = null,
+    Object? imageSorterSetting = null,
   }) {
     return _then(_$_ManagerSetting(
       isAutoCheckForUpdates: null == isAutoCheckForUpdates
           ? _value.isAutoCheckForUpdates
           : isAutoCheckForUpdates // ignore: cast_nullable_to_non_nullable
               as bool,
+      imageSorterSetting: null == imageSorterSetting
+          ? _value.imageSorterSetting
+          : imageSorterSetting // ignore: cast_nullable_to_non_nullable
+              as ImageSorterSetting,
     ));
   }
 }
@@ -100,7 +130,8 @@ class __$$_ManagerSettingCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_ManagerSetting implements _ManagerSetting {
-  _$_ManagerSetting({this.isAutoCheckForUpdates = true});
+  _$_ManagerSetting(
+      {this.isAutoCheckForUpdates = true, required this.imageSorterSetting});
 
   factory _$_ManagerSetting.fromJson(Map<String, dynamic> json) =>
       _$$_ManagerSettingFromJson(json);
@@ -109,10 +140,12 @@ class _$_ManagerSetting implements _ManagerSetting {
   @override
   @JsonKey()
   bool isAutoCheckForUpdates;
+  @override
+  ImageSorterSetting imageSorterSetting;
 
   @override
   String toString() {
-    return 'ManagerSetting(isAutoCheckForUpdates: $isAutoCheckForUpdates)';
+    return 'ManagerSetting(isAutoCheckForUpdates: $isAutoCheckForUpdates, imageSorterSetting: $imageSorterSetting)';
   }
 
   @JsonKey(ignore: true)
@@ -130,7 +163,9 @@ class _$_ManagerSetting implements _ManagerSetting {
 }
 
 abstract class _ManagerSetting implements ManagerSetting {
-  factory _ManagerSetting({bool isAutoCheckForUpdates}) = _$_ManagerSetting;
+  factory _ManagerSetting(
+      {bool isAutoCheckForUpdates,
+      required ImageSorterSetting imageSorterSetting}) = _$_ManagerSetting;
 
   factory _ManagerSetting.fromJson(Map<String, dynamic> json) =
       _$_ManagerSetting.fromJson;
@@ -138,6 +173,9 @@ abstract class _ManagerSetting implements ManagerSetting {
   @override //アップデートを自動で確認するかどうか
   bool get isAutoCheckForUpdates; //アップデートを自動で確認するかどうか
   set isAutoCheckForUpdates(bool value);
+  @override
+  ImageSorterSetting get imageSorterSetting;
+  set imageSorterSetting(ImageSorterSetting value);
   @override
   @JsonKey(ignore: true)
   _$$_ManagerSettingCopyWith<_$_ManagerSetting> get copyWith =>

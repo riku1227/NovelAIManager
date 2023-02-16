@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:novelai_manager/page/setting/image_sorter_setting_page.dart';
 import 'package:novelai_manager/repository/settings_repository.dart';
 
 import '../novelai_manager.dart';
@@ -45,6 +46,18 @@ class _SettingsPageState extends State<SettingsPage> {
                         snapshot.data!.isAutoCheckForUpdates = value;
                       });
                       await SettingsRepository.writeSetting(snapshot.data!);
+                    },
+                  ),
+                  const ListTile(
+                    title: Text("機能"),
+                  ),
+                  ListTile(
+                    title: const Text("Image Sorterの設定を開く"),
+                    subtitle: const Text("画像をボタン/キーボードを押すことで簡単に振り分けできる機能です"),
+                    leading: const Icon(Icons.perm_media),
+                    onTap: () {
+                      Navigator.push(
+                          context, ImageSorterSettingPage.getRoute());
                     },
                   ),
                   const ListTile(
